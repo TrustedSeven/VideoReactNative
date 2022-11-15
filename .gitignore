@@ -31,6 +31,8 @@ local.properties
 *.iml
 *.hprof
 .cxx/
+.lock
+package-lock.json
 
 # node.js
 #
