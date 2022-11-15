@@ -10,8 +10,16 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.4.0",
+    "@react-navigation/native": "^6.0.8",
+    "@react-navigation/native-stack": "^6.5.0",
+    "axios": "^0.27.2",
     "react": "18.1.0",
-    "react-native": "0.70.5"
+    "react-native": "0.67.3",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-query": "^4.0.0",
+    "react-native-toast-message": "^2.1.2",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
