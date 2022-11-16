@@ -8,9 +8,9 @@ const apiInstance = axios.create({
 const apiPrefix = "/api/v1";
 
 class API {
-  login = async (params) => {
-    const response = await apiInstance.post(`${apiPrefix}/user/login`, params);
-    console.log('api call result ', response.data)
+  login = (params) => {
+    // const response = await apiInstance.post(`${apiPrefix}/user/login`, params);
+    const response = { data: { result: true } };
     return response.data;
   };
   signup = async (params) => {

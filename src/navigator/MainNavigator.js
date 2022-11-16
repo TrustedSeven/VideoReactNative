@@ -9,7 +9,7 @@ import SuccessScreen from '../container/success';
 const Stack = createNativeStackNavigator();
 
 const MainNavigator = ({ parentNavigator }) => {
-    const { user, userProfile } = useContext(AuthContext);
+    const { userProfile } = useContext(AuthContext);
     const [isLoading, setLoading] = useState(true);
 
     // useEffect(() => {

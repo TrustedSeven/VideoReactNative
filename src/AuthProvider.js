@@ -7,7 +7,7 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(false);
- 
+
   const { mutate: login } = useMutation(API.login, {
     onSuccess: (data) => {
       Toast.show({
@@ -15,10 +15,7 @@ export const AuthProvider = ({ children }) => {
         text1: 'Welcome',
         text2: data.message + '👋'
       });
-      if (data.result.id !== undefined) {
-        setUserProfile(data);
-        setNotification(data.result.is_reminder);
-      }
+      setUserProfile(data);
       setLoading(false);
     },
     onError: (data) => {
@@ -53,23 +50,15 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        user,
         userProfile,
         login: async (email, password) => {
-          if (email !== '' && password !== '' && validateEmail(email)) {
+          if (email !== '' && password !== '') {
             setLoading(true);
             const userCred = {
               email,
               password
             };
             await login(userCred);
-          }
-          else if (!validateEmail(email)) {
-            Toast.show({
-              type: 'error',
-              text1: 'Sorry',
-              text2: 'Please enter correct user email.'
-            });
           } else {
             Toast.show({
               type: 'error',
