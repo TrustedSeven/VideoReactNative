@@ -5,6 +5,7 @@ import { AuthContext } from '../AuthProvider';
 import LogInScreen from '../container/login';
 import SignUpScreen from '../container/signup';
 import SuccessScreen from '../container/success';
+import CameraScreen from '../container/camera'
 
 const Stack = createNativeStackNavigator();
 
@@ -26,18 +27,23 @@ const MainNavigator = ({ parentNavigator }) => {
         <NavigationContainer>
             <>
                 <Stack.Navigator
-                    initialRouteName={'SignIn'}
+                    initialRouteName={'LogIn'} 
                     screenOptions={{ headerShown: false }}
                 >
                     {
                         userProfile ?
                             (
+                                <>
                                 <Stack.Screen name="Success" component={SuccessScreen} />
+                                <Stack.Screen name="Camera" component={CameraScreen} />
+                                </>
 
                             ) : (
                                 <>
                                     <Stack.Screen name="LogIn" component={LogInScreen} />
                                     <Stack.Screen name="SignUp" component={SignUpScreen} />
+                                    <Stack.Screen name="Success" component={SuccessScreen} />
+                                    <Stack.Screen name="Camera" component={CameraScreen} />
                                 </>
                             )
                     }

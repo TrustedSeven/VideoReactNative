@@ -2,7 +2,7 @@ import axios from "axios";
 
 axios.defaults.withCredentials = false;
 const apiInstance = axios.create({
-  baseURL: "http://livelikeyouaredying.com",
+  baseURL: "https://conducirenperu.com",
   timeout: 300000,
 });
 const apiPrefix = "/api/v1";
