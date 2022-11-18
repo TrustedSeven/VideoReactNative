@@ -12,19 +12,36 @@ import {
 import {RNCamera} from 'react-native-camera';
 import Button from '../../components/Button';
 import {TouchableOpacity} from 'react-native';
+import { Video } from 'react-native-video';
+import Background from '../../components/Background';
+import CameraButton from '../../components/CameraButton';
 
 
 const SuccessScreen = ({navigation}) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.successContent}>Success</Text>
-      <Button
+    <Background>
+      <View style={styles.container}>
+      {/* <Video
+        source = {{}}
+        style={{ width: 300, height: 300 }}
+        controls={true}
+        ref={(ref) => {
+        this.player = ref
+        }}
+      /> */}
+      {/* <Button
         onPress={() => {
             navigation.push('Camera')
         }}>
         Take Video
-      </Button>
+      </Button> */}
+      <CameraButton
+        onPress={() => {
+          navigation.push('Camera')
+      }}>
+      </CameraButton>
     </View>
+    </Background>
   );
 };
 

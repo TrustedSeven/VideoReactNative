@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Alert, Text } from 'react-native'
+import { StyleSheet, View,  Alert, Text } from 'react-native'
 import { RNCamera } from 'react-native-camera'
 
 
@@ -28,6 +28,7 @@ class CameraScreen extends Component {
             //   }}
             
             //captureAudio={false}
+
           />
         </View>
         // <View>

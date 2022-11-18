@@ -30,6 +30,7 @@
     "react-native-screens": "^3.18.2",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-toast-message": "^2.1.2",
+    "react-native-video": "^5.2.1",
     "react-native-web": "~0.13.12",
     "react-query": "^4.0.0",
     "rn-fetch-blob": "^0.12.0"
