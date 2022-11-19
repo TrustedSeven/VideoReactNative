@@ -17,6 +17,7 @@ import Background from '../../components/Background';
 import CameraButton from '../../components/CameraButton';
 
 
+
 const SuccessScreen = ({navigation}) => {
   return (
     <Background>
@@ -29,17 +30,14 @@ const SuccessScreen = ({navigation}) => {
         this.player = ref
         }}
       /> */}
-      {/* <Button
-        onPress={() => {
-            navigation.push('Camera')
-        }}>
-        Take Video
-      </Button> */}
+      
       <CameraButton
         onPress={() => {
           navigation.push('Camera')
       }}>
       </CameraButton>
+      <Button>AAA</Button>
+      
     </View>
     </Background>
   );

@@ -2,14 +2,14 @@ import React from 'react'
 import { TouchableOpacity, Image, StyleSheet } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
 
-export default function CameraButton({ mode, style, ...props }) {
+export default function UploadButton({ mode, style, ...props }) {
   return (
     <TouchableOpacity labelStyle={styles.text}
         mode={mode}
         {...props} style={styles.container}>
       <Image
         style={styles.image}
-        source={require('../assets/camera-icon-36.png')}
+        source={require('../assets/upload-button.png')}
       />
     </TouchableOpacity>
   )
@@ -18,11 +18,12 @@ export default function CameraButton({ mode, style, ...props }) {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 10 + getStatusBarHeight(),
-    //alignItems:'left'
+    bottom: 200 + getStatusBarHeight(),
+    right:-180,
+    // alignItems:'left'
   },
   image: {
-    width:72,
-    height: 72,
+    width:200,
+    height: 30,
   },
 })
