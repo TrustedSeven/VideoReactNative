@@ -23,6 +23,8 @@ const styles = StyleSheet.create({
     width: '100%',
     marginVertical: 10,
     paddingVertical: 2,
+    // marginLeft: 5,
+    marginRight:5
   },
   text: {
     fontWeight: 'bold',

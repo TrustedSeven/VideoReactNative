@@ -10,7 +10,7 @@ class CameraScreen extends Component {
       return (
         <View style={styles.container}>
           <RNCamera
-            style={{ flex: 1, alignItems: 'center' }}
+            style={{ flex: 1, alignItems: 'center', height:500,  }}
             ref={ref => {
               this.camera = ref
             }}
@@ -44,7 +44,7 @@ class CameraScreen extends Component {
     container: {
       flex: 1,
       flexDirection: 'column',
-      backgroundColor: 'black'
+      backgroundColor: 'black',
     }
   })
   

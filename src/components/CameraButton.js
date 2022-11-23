@@ -5,8 +5,8 @@ import { getStatusBarHeight } from 'react-native-status-bar-height'
 export default function CameraButton({ mode, style, ...props }) {
   return (
     <TouchableOpacity labelStyle={styles.text}
-        mode={mode}
-        {...props} style={styles.container}>
+    mode={mode}
+    {...props} style={styles.container}>
       <Image
         style={styles.image}
         source={require('../assets/camera-icon-36.png')}
