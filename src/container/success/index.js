@@ -5,6 +5,7 @@ import {
   View,
   Alert,
   Text,
+  Input,
   PermissionsAndroid,
   Platform,
   SwipeableListView,
@@ -15,6 +16,8 @@ import {RNCamera} from 'react-native-camera';
 import {SelectList} from 'react-native-dropdown-select-list';
 import DocumentPicker from 'react-native-document-picker';
 import {Video} from 'react-native-video';
+import NumericInput from 'react-native-numeric-input';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import Button from '../../components/Button';
 import Background from '../../components/Background';
@@ -45,15 +48,24 @@ const SuccessScreen = ({navigation}) => {
 
   const [singleFile, setSingleFile] = useState();
 
+  const [startsec, setStartsec] = useState(0);
+  const [recsec, setRecsec] = useState(0);
+
   const SingleFilePicker = async () => {
     try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
+      console.log("BEFORE PICKET >>>>>>>>>>>>>>>>>>>>", DocumentPicker);
+      // const file = await DocumentPicker.pick({
+      //   type: [DocumentPicker.types.pdf],
+      //   // copyTo: 'documentDirectory',
+      // });
+      const res = await DocumentPicker.pickDirectory();
+      console.log("RESULT PICKET >>>>>>>>>>>>>>>>>>>>", res);
 
       // this.setState({ singleFileOBJ: res });
       setSingleFile(res);
     } catch (err) {
+      console.log("FAILD PICKET >>>>>>>>>>>>>>>>>>>>", err);
+
       if (DocumentPicker.isCancel(err)) {
         Alert.alert('Canceled');
       } else {
@@ -62,6 +74,11 @@ const SuccessScreen = ({navigation}) => {
       }
     }
   };
+  const Process = async() =>{
+    
+    console.log('Process')
+
+  }
 
   return (
     <ScrollView style={styles.background}>
@@ -106,9 +123,34 @@ const SuccessScreen = ({navigation}) => {
           </Button>
         </View>
         <View style={styles.secondpicker}>
-          <Header>Seconds to Start</Header>
-
-          <Text> File Name: </Text>
+          <Header>Seconds to Start   </Header>
+          <NumericInput onChange={value => console.log(value)} />
+          {/* <Input keyboardType='numeric' /> */}
+        </View>
+        <View style={styles.secondpicker}>
+          <Header>Recording Time     </Header>
+          <NumericInput style={{marginLeft: 10}} onChange={value => console.log(value)} />
+          {/* <Input keyboardType='numeric' /> */}
+        </View>
+        <View style={styles.selectEvent}>
+          <Header>Select Audio</Header>
+          <SelectList
+            setSelected={val => setSelected(val)}
+            data={data}
+            save="value"
+          />
+        </View>
+        <View style={styles.buttons}>
+          {/* <CameraButton
+          onPress={() => {
+            navigation.push('Camera');
+          }}></CameraButton> */}
+          <Button
+            style={{width: '100%', marginBottom:60}}
+            mode="contained"
+            onPress={Process}>
+            Process
+          </Button>
         </View>
       </Background>
     </ScrollView>

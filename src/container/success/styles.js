@@ -23,10 +23,12 @@ export default StyleSheet.create({
         marginTop: 30
     },
     buttons:{
+        marginTop:10,
         width:'100%',
         flexDirection:'row', 
     },
     secondpicker:{
+        marginTop:20,
         width:'100%',
         flexDirection:'row'
     },
