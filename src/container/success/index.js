@@ -68,7 +68,8 @@ const SuccessScreen = ({navigation}) => {
       console.log("FAILD PICKET >>>>>>>>>>>>>>>>>>>>", err);
 
       if (DocumentPicker.isCancel(err)) {
-        Alert.alert('Canceled');
+        Alert.alert('No file Chosen');
+        setSingleFile();
       } else {
         Alert.alert('Unknown Error: ' + JSON.stringify(err));
         throw err;
