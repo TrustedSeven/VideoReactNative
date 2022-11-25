@@ -3,7 +3,7 @@
 buildscript {
     ext {
         buildToolsVersion = "30.0.2"
-        minSdkVersion = 21
+        minSdkVersion = 24
         compileSdkVersion = 30
         targetSdkVersion = 30
         ndkVersion = "21.4.7075529"
@@ -36,6 +36,9 @@ allprojects {
                 excludeGroup "com.facebook.react"
             }
         }
+        mavenCentral()
+        mavenLocal()
+        jcenter()
         google()
         maven { url 'https://www.jitpack.io' }
     }

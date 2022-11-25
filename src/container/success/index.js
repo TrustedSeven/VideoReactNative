@@ -18,6 +18,8 @@ import DocumentPicker from 'react-native-document-picker';
 import {Video} from 'react-native-video';
 import NumericInput from 'react-native-numeric-input';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import VideoPlayer from 'react-native-video-player';
+// import { LogLevel, RNFFmpeg } from 'ffmpeg-kit-react-native';
 
 import Button from '../../components/Button';
 import Background from '../../components/Background';
@@ -53,19 +55,18 @@ const SuccessScreen = ({navigation}) => {
 
   const SingleFilePicker = async () => {
     try {
-      console.log("BEFORE PICKET >>>>>>>>>>>>>>>>>>>>");
+      console.log('BEFORE PICKET >>>>>>>>>>>>>>>>>>>>');
       // const file = await DocumentPicker.pick({
       //   type: [DocumentPicker.types.pdf],
       //   // copyTo: 'documentDirectory',
       // });
       const res = await DocumentPicker.pick();
-      console.log("RESULT PICKET >>>>>>>>>>>>>>>>>>>>", res);
+      console.log('RESULT PICKET >>>>>>>>>>>>>>>>>>>>', res);
 
       // this.setState({ singleFileOBJ: res });
       setSingleFile(res);
-      
     } catch (err) {
-      console.log("FAILD PICKET >>>>>>>>>>>>>>>>>>>>", err);
+      console.log('FAILD PICKET >>>>>>>>>>>>>>>>>>>>', err);
 
       if (DocumentPicker.isCancel(err)) {
         Alert.alert('No file Chosen');
@@ -76,11 +77,13 @@ const SuccessScreen = ({navigation}) => {
       }
     }
   };
-  const Process = async() =>{
-    
-    console.log('Process')
+  const Process = async () => {
+    // RNFFmpeg.execute('-i file1.mp4 -c:v mpeg4 file2.mp4').then(result => console.log(`FFmpeg process exited with rc=${result}.`));
 
-  }
+    console.log('Process');
+
+    navigation.push('VideoPlay');
+  };
 
   return (
     <ScrollView style={styles.background}>
@@ -96,7 +99,7 @@ const SuccessScreen = ({navigation}) => {
         <View style={styles.filepicker}>
           <Header>Select Video File</Header>
 
-          <Text> File Name: {singleFile?singleFile[0].name:''} </Text>
+          <Text> File Name: {singleFile ? singleFile[0].name : ''} </Text>
 
           {/* <Text>file Type: {singleFile.type ? singleFile.type : ''}</Text>
 
@@ -125,14 +128,17 @@ const SuccessScreen = ({navigation}) => {
           </Button>
         </View>
         <View style={styles.secondpicker}>
-          <Header>Seconds to Start   </Header>
+          <Header>Seconds to Start     </Header>
           <NumericInput onChange={value => console.log(value)} />
-          {/* <Input keyboardType='numeric' /> */}
+          
         </View>
         <View style={styles.secondpicker}>
-          <Header>Recording Time     </Header>
-          <NumericInput style={{marginLeft: 10}} onChange={value => console.log(value)} />
-          {/* <Input keyboardType='numeric' /> */}
+          <Header>Recording Time      </Header>
+          <NumericInput
+            style={{marginLeft: 10}}
+            onChange={value => console.log(value)}
+          />
+          
         </View>
         <View style={styles.selectEvent}>
           <Header>Select Audio</Header>
@@ -143,17 +149,14 @@ const SuccessScreen = ({navigation}) => {
           />
         </View>
         <View style={styles.buttons}>
-          {/* <CameraButton
-          onPress={() => {
-            navigation.push('Camera');
-          }}></CameraButton> */}
           <Button
-            style={{width: '100%', marginBottom:60}}
+            style={{width: '100%', marginBottom: 60}}
             mode="contained"
             onPress={Process}>
             Process
           </Button>
         </View>
+        
       </Background>
     </ScrollView>
   );

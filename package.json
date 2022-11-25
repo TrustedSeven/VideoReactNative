@@ -16,6 +16,7 @@
     "@react-navigation/native-stack": "^6.5.0",
     "@react-navigation/stack": "^5.12.8",
     "axios": "^0.27.2",
+    "full": "^1.0.1",
     "react": "17.0.2",
     "react-dom": "16.13.1",
     "react-native": "^0.67.3",
@@ -33,6 +34,7 @@
     "react-native-toast-message": "^2.1.2",
     "react-native-vector-icons": "^9.2.0",
     "react-native-video": "^5.2.1",
+    "react-native-video-player": "^0.14.0",
     "react-native-web": "~0.13.12",
     "react-query": "^4.0.0",
     "rn-fetch-blob": "^0.12.0"

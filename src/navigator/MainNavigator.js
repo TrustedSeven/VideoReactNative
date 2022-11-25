@@ -6,6 +6,7 @@ import LogInScreen from '../container/login';
 import SignUpScreen from '../container/signup';
 import SuccessScreen from '../container/success';
 import CameraScreen from '../container/camera';
+import VideoPlay from '../container/ffmpeg';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,7 @@ const MainNavigator = ({ parentNavigator }) => {
                                     <Stack.Screen name="SignUp" component={SignUpScreen} />
                                     <Stack.Screen name="Success" component={SuccessScreen} />
                                     <Stack.Screen name="Camera" component={CameraScreen} />
+                                    <Stack.Screen name="VideoPlay" component={VideoPlay} />
                                 </>
                             )
                     }
