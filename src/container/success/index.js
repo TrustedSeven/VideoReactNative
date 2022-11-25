@@ -53,16 +53,17 @@ const SuccessScreen = ({navigation}) => {
 
   const SingleFilePicker = async () => {
     try {
-      console.log("BEFORE PICKET >>>>>>>>>>>>>>>>>>>>", DocumentPicker);
+      console.log("BEFORE PICKET >>>>>>>>>>>>>>>>>>>>");
       // const file = await DocumentPicker.pick({
       //   type: [DocumentPicker.types.pdf],
       //   // copyTo: 'documentDirectory',
       // });
-      const res = await DocumentPicker.pickDirectory();
+      const res = await DocumentPicker.pick();
       console.log("RESULT PICKET >>>>>>>>>>>>>>>>>>>>", res);
 
       // this.setState({ singleFileOBJ: res });
       setSingleFile(res);
+      
     } catch (err) {
       console.log("FAILD PICKET >>>>>>>>>>>>>>>>>>>>", err);
 
@@ -94,7 +95,7 @@ const SuccessScreen = ({navigation}) => {
         <View style={styles.filepicker}>
           <Header>Select Video File</Header>
 
-          <Text> File Name: </Text>
+          <Text> File Name: {singleFile?singleFile[0].name:''} </Text>
 
           {/* <Text>file Type: {singleFile.type ? singleFile.type : ''}</Text>
 

@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import {RNCamera} from 'react-native-camera';
-// import RNFetchBlob from 'react-native-fetch-blob';
-// import RNFS from 'react-native-fs'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -9,7 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import CameraRoll from '@react-native-community/cameraroll';
+
+// import CameraRoll from '@react-native-community/cameraroll';
+// import { CameraRoll } from '@react-native-camera-roll/camera-roll'
 
 export default class Test extends Component {
   constructor(props) {
@@ -46,24 +46,24 @@ export default class Test extends Component {
     const data = await this.camera.recordAsync(cameraConfig);
     console.log('+++++++++++ Recorded Result', data);
     this.setState({recording: false});
-    try {
-      CameraRoll.save(data.uri, 'video')
-        .then(onfulfilled => {
-          console.log('+++++++++++ Saved Successfully!!!');
+    // try {
+    //   CameraRoll.save(data.uri, 'video')
+    //     .then(onfulfilled => {
+    //       console.log('+++++++++++ Saved Successfully!!!');
 
-          ToastAndroid.show(
-            `VidApp Videos: ${onfulfilled}`,
-            ToastAndroid.SHORT,
-          );
-        })
-        .catch(error => {
-          console.log('+++++++++++ Failed Successfully!!!', error);
+    //       ToastAndroid.show(
+    //         `VidApp Videos: ${onfulfilled}`,
+    //         ToastAndroid.SHORT,
+    //       );
+    //     })
+    //     .catch(error => {
+    //       console.log('+++++++++++ Failed Successfully!!!', error);
 
-          ToastAndroid.show(`${error.message}`, ToastAndroid.SHORT);
-        });
-    } catch (error) {
-      console.log('+++++++++++ ERROR!!!', error);
-    }
+    //       ToastAndroid.show(`${error.message}`, ToastAndroid.SHORT);
+    //     });
+    // } catch (error) {
+    //   console.log('+++++++++++ ERROR!!!', error);
+    // }
 
     //SAVE VIDEO
     // const { config, fs, android } = RNFetchBlob;
