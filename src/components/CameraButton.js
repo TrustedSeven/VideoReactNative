@@ -17,8 +17,8 @@ export default function CameraButton({ mode, style, ...props }) {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    bottom: 10 + getStatusBarHeight(),
+    position: 'relative',
+    bottom: -650 + getStatusBarHeight(),
     //alignItems:'left'
   },
   image: {

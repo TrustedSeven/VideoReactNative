@@ -10,6 +10,8 @@ import {
 // import CameraRoll from '@react-native-community/cameraroll';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll'
 
+import CameraButton from '../../components/CameraButton';
+
 export default class CameraScreen extends Component {
   constructor(props) {
     super(props);
@@ -91,10 +93,11 @@ export default class CameraScreen extends Component {
           //   ratio="16:9"
           style={{height: '100%'}}>
           <View style={{flexDirection: 'column', alignItems: 'center'}}>
-            <TouchableOpacity onPress={this.recordVideo}>
+            {/* <TouchableOpacity onPress={this.recordVideo}>
               <Text style={{backgroundColor: 'white'}}>Click</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Text>{this.state.seconds}</Text>
+            <CameraButton onPress={this.recordVideo}></CameraButton>
           </View>
         </RNCamera>
       </View>

@@ -133,7 +133,7 @@ const SuccessScreen = ({navigation}) => {
           
         </View>
         <View style={styles.secondpicker}>
-          <Header>Recording Time      </Header>
+          <Header>Recording Time       </Header>
           <NumericInput
             style={{marginLeft: 10}}
             onChange={value => console.log(value)}
