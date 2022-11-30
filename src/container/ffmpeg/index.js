@@ -32,7 +32,7 @@ const VideoPlay = () => {
               console.log('upload file')
             }}>
             Upload Video
-          </Button>
+      </Button>
     </Background>
   );
 };
