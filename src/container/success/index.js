@@ -111,7 +111,7 @@ const SuccessScreen = ({navigation}) => {
 
     console.log('--------End---------');
 
-    // navigation.push('VideoPlay');
+    navigation.push('VideoPlay');
   };
 
   return (
@@ -157,11 +157,11 @@ const SuccessScreen = ({navigation}) => {
           </Button>
         </View>
         <View style={styles.secondpicker}>
-          <Header>Seconds to Start </Header>
+          <Header>Seconds to Start  </Header>
           <NumericInput onChange={value => console.log(value)} />
         </View>
         <View style={styles.secondpicker}>
-          <Header>Recording Time </Header>
+          <Header>Recording Time    </Header>
           <NumericInput
             style={{marginLeft: 10}}
             onChange={value => console.log(value)}

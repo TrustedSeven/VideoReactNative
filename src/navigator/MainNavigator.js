@@ -37,15 +37,13 @@ const MainNavigator = ({ parentNavigator }) => {
                                 <>
                                 <Stack.Screen name="Success" component={SuccessScreen} />
                                 <Stack.Screen name="Camera" component={CameraScreen} />
+                                <Stack.Screen name="VideoPlay" component={VideoPlay} />
                                 </>
 
                             ) : (
                                 <>
                                     <Stack.Screen name="LogIn" component={LogInScreen} />
                                     <Stack.Screen name="SignUp" component={SignUpScreen} />
-                                    <Stack.Screen name="Success" component={SuccessScreen} />
-                                    <Stack.Screen name="Camera" component={CameraScreen} />
-                                    <Stack.Screen name="VideoPlay" component={VideoPlay} />
                                 </>
                             )
                     }

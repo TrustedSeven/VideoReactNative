@@ -8,14 +8,17 @@ const apiInstance = axios.create({
 const apiPrefix = "/api/v1";
 
 class API {
-  login = (params) => {
-    // const response = await apiInstance.post(`${apiPrefix}/user/login`, params);
-    const response = { data: { result: true } };
+  login = async (params) => {
+    console.log(params);
+    const response = await apiInstance.post(`${apiPrefix}/user/login`, params);
+    // const response = { data: { result: true } };
     return response.data;
   };
   signup = async (params) => {
-    let body = params.body;
-    const response = await apiInstance.post(`${apiPrefix}/user/signup`, body, {
+    console.log(params);
+    // let body = params.body;
+    // console.log(body)
+    const response = await apiInstance.post(`${apiPrefix}/user/signup`, params, {
       headers: {
         'Content-Type': 'multipart/form-data; ',
       }

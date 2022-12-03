@@ -1,25 +1,42 @@
-import React, { useState } from 'react'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
-import { Text } from 'react-native-paper'
-import Background from '../../components/Background'
-import Logo from '../../components/Logo'
-import Header from '../../components/Header'
-import Button from '../../components/Button'
-import TextInput from '../../components/TextInput'
-import BackButton from '../../components/BackButton'
-import { theme } from '../../core/theme'
-import { emailValidator } from '../../helpers/emailValidator'
-import { passwordValidator } from '../../helpers/passwordValidator'
+import React, {useState, useContext} from 'react';
+import {TouchableOpacity, StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-paper';
+import Toast from 'react-native-toast-message';
+import Background from '../../components/Background';
+import Logo from '../../components/Logo';
+import Header from '../../components/Header';
+import Button from '../../components/Button';
+import TextInput from '../../components/TextInput';
+import BackButton from '../../components/BackButton';
+import {theme} from '../../core/theme';
+import {emailValidator} from '../../helpers/emailValidator';
+import {passwordValidator} from '../../helpers/passwordValidator';
+import {AuthContext} from '../../AuthProvider';
 
-export default function LogInScreen({ navigation }) {
-  const [email, setEmail] = useState({ value: '', error: '' })
-  const [password, setPassword] = useState({ value: '', error: '' })
-  const [confirmpassword, setconfirmPassword] = useState({ value: '', error: '' })
+export default function LogInScreen({navigation}) {
+  const {signup} = useContext(AuthContext);
+  const [email, setEmail] = useState({value: '', error: ''});
+  const [password, setPassword] = useState({value: '', error: ''});
+  const [confirmpassword, setconfirmPassword] = useState({
+    value: '',
+    error: '',
+  });
+  const [phoneId, setPhoneId] = useState({value: 'Serial', error: ''});
+
 
   const onSignUpPressed = () => {
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
-    const confirmpasswordError = passwordValidator(confirmpassword.value)
+    const emailError = emailValidator(email.value);
+    const passwordError = passwordValidator(password.value);
+    const confirmpasswordError = passwordValidator(confirmpassword.value);
+
+    if(password.value === confirmpassword.value){
+      signup(email, password, phoneId);
+      console.log('password match')
+    }
+    else{
+      console.log('password does not match')
+    }
+    
     // if (emailError || passwordError) {
     //   setEmail({ ...email, error: emailError })
     //   setPassword({ ...password, error: passwordError })
@@ -29,8 +46,8 @@ export default function LogInScreen({ navigation }) {
     //   index: 0,
     //   routes: [{ name: 'Dashboard' }],
     // })
-    navigation.navigate('LogIn')
-  }
+    // navigation.navigate('LogIn');
+  };
 
   return (
     <Background>
@@ -41,7 +58,7 @@ export default function LogInScreen({ navigation }) {
         label="Email"
         returnKeyType="next"
         value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
+        onChangeText={text => setEmail({value: text, error: ''})}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -53,7 +70,7 @@ export default function LogInScreen({ navigation }) {
         label="Password"
         returnKeyType="done"
         value={password.value}
-        onChangeText={(text) => setPassword({ value: text, error: '' })}
+        onChangeText={text => setPassword({value: text, error: ''})}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
@@ -62,7 +79,7 @@ export default function LogInScreen({ navigation }) {
         label="Confirm Password"
         returnKeyType="done"
         value={confirmpassword.value}
-        onChangeText={(text) => setconfirmPassword({ value: text, error: '' })}
+        onChangeText={text => setconfirmPassword({value: text, error: ''})}
         error={!!confirmpassword.error}
         errorText={confirmpassword.error}
         secureTextEntry
@@ -74,7 +91,9 @@ export default function LogInScreen({ navigation }) {
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
       </View> */}
-      <Button mode="contained" onPress={onSignUpPressed}>
+      <Button
+        mode="contained"
+        onPress={onSignUpPressed}>
         Sign Up
       </Button>
       <View style={styles.row}>
@@ -84,7 +103,7 @@ export default function LogInScreen({ navigation }) {
         </TouchableOpacity>
       </View>
     </Background>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -105,4 +124,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: theme.colors.primary,
   },
-})
+});
