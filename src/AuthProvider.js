@@ -13,7 +13,7 @@ export const AuthProvider = ({children}) => {
       Toast.show({
         type: 'success',
         text1: 'Welcome',
-        text2: data.message + '👋',
+        text2: "Successfully login" + '👋',
       });
       setUserProfile(data);
       setLoading(false);
@@ -51,13 +51,13 @@ export const AuthProvider = ({children}) => {
     <AuthContext.Provider
       value={{
         userProfile,
-        login: async (email, password, phoneId) => {
-          if (email.value !== '' && password.value !== '') {
+        login: async (email, password, idcelular) => {
+          if (email !== '' && password !== '') {
             setLoading(true);
             const userCred = {
               email,
               password,
-              phoneId,
+              idcelular,
             };
             await login(userCred);
           } else {
@@ -68,13 +68,17 @@ export const AuthProvider = ({children}) => {
             });
           }
         },
-        signup: async (email, password, phoneId) => {
+        signup: async (email, password, id_celular,nombre, apellido, pais, celular) => {
           if (email.value !== '' && password.value !== '') {
             setLoading(true);
             const userCred = {
               email,
               password,
-              phoneId,
+              id_celular,
+              nombre,
+              apellido,
+              pais,
+              celular,
             };
             await signup(userCred);
           } else {

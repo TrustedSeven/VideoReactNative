@@ -15,22 +15,23 @@ import {AuthContext} from '../../AuthProvider';
 
 export default function LogInScreen({navigation}) {
   const {signup} = useContext(AuthContext);
-  const [email, setEmail] = useState({value: '', error: ''});
-  const [password, setPassword] = useState({value: '', error: ''});
-  const [confirmpassword, setconfirmPassword] = useState({
-    value: '',
-    error: '',
-  });
-  const [phoneId, setPhoneId] = useState({value: 'Serial', error: ''});
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmpassword, setconfirmPassword] = useState('');
+  const [id_celular, setId_celular] = useState('xxxxxxxx');
+  const [nombre, setNombre] = useState('name');
+  const [apellido, setApellido] = useState('last name');
+  const [pais, setPais] = useState('PE');
+  const [celular, setCeluar] = useState('+19379645934');
 
 
   const onSignUpPressed = () => {
-    const emailError = emailValidator(email.value);
-    const passwordError = passwordValidator(password.value);
-    const confirmpasswordError = passwordValidator(confirmpassword.value);
+    const emailError = emailValidator(email);
+    const passwordError = passwordValidator(password);
+    const confirmpasswordError = passwordValidator(confirmpassword);
 
-    if(password.value === confirmpassword.value){
-      signup(email, password, phoneId);
+    if(password === confirmpassword){
+      signup(email, password, id_celular, nombre, apellido, pais, celular);
       console.log('password match')
     }
     else{
@@ -51,14 +52,14 @@ export default function LogInScreen({navigation}) {
 
   return (
     <Background>
-      {/* <BackButton goBack={navigation.goBack} /> */}
+      <BackButton goBack={navigation.goBack} />
       <Logo />
       <Header>Create Account</Header>
       <TextInput
         label="Email"
         returnKeyType="next"
         value={email.value}
-        onChangeText={text => setEmail({value: text, error: ''})}
+        onChangeText={text => setEmail(text)}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -70,7 +71,7 @@ export default function LogInScreen({navigation}) {
         label="Password"
         returnKeyType="done"
         value={password.value}
-        onChangeText={text => setPassword({value: text, error: ''})}
+        onChangeText={text => setPassword(text)}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
@@ -79,7 +80,7 @@ export default function LogInScreen({navigation}) {
         label="Confirm Password"
         returnKeyType="done"
         value={confirmpassword.value}
-        onChangeText={text => setconfirmPassword({value: text, error: ''})}
+        onChangeText={text => setconfirmPassword(text)}
         error={!!confirmpassword.error}
         errorText={confirmpassword.error}
         secureTextEntry
@@ -98,7 +99,7 @@ export default function LogInScreen({navigation}) {
       </Button>
       <View style={styles.row}>
         <Text>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('Success')}>
+        <TouchableOpacity onPress={() => navigation.replace('LogIn')}>
           <Text style={styles.link}>Log In</Text>
         </TouchableOpacity>
       </View>

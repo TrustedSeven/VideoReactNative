@@ -23,6 +23,7 @@ import {LogLevel, FFmpegKit, FFmpegKitConfig} from 'ffmpeg-kit-react-native';
 
 import Button from '../../components/Button';
 import Background from '../../components/Background';
+import BackButton from '../../components/BackButton'
 import CameraButton from '../../components/CameraButton';
 import {theme} from '../../core/theme';
 import Header from '../../components/Header';
@@ -117,6 +118,7 @@ const SuccessScreen = ({navigation}) => {
   return (
     <ScrollView style={styles.background}>
       <Background>
+        {/* <BackButton goBack={navigation.goBack} /> */}
         <View style={styles.selectEvent}>
           <Header>Select Edit Option</Header>
           <SelectList

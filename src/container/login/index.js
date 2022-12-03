@@ -14,14 +14,14 @@ import {AuthContext} from '../../AuthProvider';
 
 export default function LogInScreen({navigation}) {
   const {login} = useContext(AuthContext);
-  const [email, setEmail] = useState({value: '', error: ''});
-  const [password, setPassword] = useState({value: '', error: ''});
-  const [phoneId, setPhoneId] = useState({value: 'Serial', error: ''});
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [idcelular, setIdcelular] = useState('xxxxxx');
 
   const onLoginPressed = () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
-    login(email, password, phoneId);
+    login(email, password, idcelular);
     // if (emailError || passwordError) {
     //   setEmail({ ...email, error: emailError })
     //   setPassword({ ...password, error: passwordError })
@@ -36,14 +36,14 @@ export default function LogInScreen({navigation}) {
 
   return (
     <Background>
-      {/* <BackButton goBack={navigation.goBack} /> */}
+      <BackButton goBack={navigation.goBack} />
       <Logo />
       <Header>Welcome back.</Header>
       <TextInput
         label="Email"
         returnKeyType="next"
-        value={email.value}
-        onChangeText={text => setEmail({value: text, error: ''})}
+        value={email}
+        onChangeText={text => setEmail(text)}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -54,8 +54,8 @@ export default function LogInScreen({navigation}) {
       <TextInput
         label="Password"
         returnKeyType="done"
-        value={password.value}
-        onChangeText={text => setPassword({value: text, error: ''})}
+        value={password}
+        onChangeText={text => setPassword(text)}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
