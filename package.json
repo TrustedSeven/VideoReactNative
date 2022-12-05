@@ -23,6 +23,7 @@
     "react-dom": "16.13.1",
     "react-native": "^0.68.2",
     "react-native-camera": "^4.2.1",
+    "react-native-device-info": "^10.3.0",
     "react-native-document-picker": "^8.1.2",
     "react-native-dropdown-select-list": "^2.0.2",
     "react-native-gesture-handler": "~1.8.0",

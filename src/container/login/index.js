@@ -2,7 +2,7 @@ import React, {useState, useContext} from 'react';
 import {TouchableOpacity, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
-
+import DeviceInfo from 'react-native-device-info';
 
 import Background from '../../components/Background';
 import Logo from '../../components/Logo';
@@ -20,16 +20,33 @@ export default function LogInScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [idcelular, setIdcelular] = useState('xxxxxx');
+  const [idcel, setIdcel] = useState('');
 
+  const getdeviceId = () => {
+    var uniqueId = DeviceInfo.getUniqueId();
+    setIdcel(uniqueId);
+    setIdcelular(idcel._z);
+  };
   const onLoginPressed = () => {
-    const emailError = emailValidator(email.value);
-    const passwordError = passwordValidator(password.value);
-    login(email, password, idcelular);
-    Toast.show({
-      type: 'success',
-      text1: 'Loading',
-      text2: "Por favor espere el servidor......",
-    });
+    const emailError = emailValidator(email);
+    const passwordError = passwordValidator(password);
+    console.log(idcelular);
+    if (email != '' && password != '') {
+      login(email, password, idcelular);
+      Toast.show({
+        type: 'success',
+        text1: 'Loading',
+        text2: 'Por favor espere el servidor......',
+      });
+    }
+    else{
+      Toast.show({
+        type: 'error',
+        text1: 'Sorry',
+        text2: 'Por favor inserte correo electrónico y contraseña',
+      });
+    }
+
     // if (emailError || passwordError) {
     //   setEmail({ ...email, error: emailError })
     //   setPassword({ ...password, error: passwordError })
@@ -51,7 +68,10 @@ export default function LogInScreen({navigation}) {
         label="Email"
         returnKeyType="next"
         value={email}
-        onChangeText={text => setEmail(text)}
+        onChangeText={text => {
+          setEmail(text);
+          getdeviceId();
+        }}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -74,10 +94,7 @@ export default function LogInScreen({navigation}) {
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
       </View>
-      {/* <Button mode="contained" onPress={onLoginPressed}> */}
-      <Button
-        mode="contained"
-        onPress={onLoginPressed}>
+      <Button mode="contained" onPress={onLoginPressed}>
         Login
       </Button>
       <View style={styles.row}>

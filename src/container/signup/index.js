@@ -3,6 +3,7 @@ import {TouchableOpacity, StyleSheet, View, ScrollView} from 'react-native';
 import {Text} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import PhoneInput from "react-native-phone-number-input";
+import DeviceInfo from 'react-native-device-info';
 
 import Background from '../../components/Background';
 import Logo from '../../components/Logo';
@@ -25,18 +26,27 @@ export default function LogInScreen({navigation}) {
   const [apellido, setApellido] = useState('');
   const [pais, setPais] = useState('PE');
   const [celular, setCeluar] = useState('');
+  const [idcel, setIdcel] = useState('');
   // const [countrycode, setCountrycode] = useState('+51');
   // const [formattedValue, setFormattedValue] = useState("");
 
   // const phoneInput = useRef<PhoneInput>(null);
 
+  const getdeviceId = () => {
+    var uniqueId = DeviceInfo.getUniqueId();
+    setIdcel(uniqueId);
+    setId_celular(idcel._z);
+  };
+
   const onSignUpPressed = () => {
     const emailError = emailValidator(email);
     const passwordError = passwordValidator(password);
     const confirmpasswordError = passwordValidator(confirmpassword);
+    
 
     if (password === confirmpassword && password != '') {
       signup(email, password, id_celular, nombre, apellido, pais, celular);
+      console.log(id_celular);
       console.log('password match');
       Toast.show({
         type: 'success',
@@ -74,7 +84,9 @@ export default function LogInScreen({navigation}) {
           label="Email"
           returnKeyType="next"
           value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={text => {setEmail(text);
+            getdeviceId();
+          }}
           autoCapitalize="none"
           autoCompleteType="email"
           textContentType="emailAddress"
