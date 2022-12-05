@@ -1,7 +1,9 @@
-import React, {useState, useContext} from 'react';
-import {TouchableOpacity, StyleSheet, View} from 'react-native';
+import React, {useState, useContext, useRef} from 'react';
+import {TouchableOpacity, StyleSheet, View, ScrollView} from 'react-native';
 import {Text} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
+import PhoneInput from "react-native-phone-number-input";
+
 import Background from '../../components/Background';
 import Logo from '../../components/Logo';
 import Header from '../../components/Header';
@@ -19,25 +21,37 @@ export default function LogInScreen({navigation}) {
   const [password, setPassword] = useState('');
   const [confirmpassword, setconfirmPassword] = useState('');
   const [id_celular, setId_celular] = useState('xxxxxxxx');
-  const [nombre, setNombre] = useState('name');
-  const [apellido, setApellido] = useState('last name');
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
   const [pais, setPais] = useState('PE');
-  const [celular, setCeluar] = useState('+19379645934');
+  const [celular, setCeluar] = useState('');
+  // const [countrycode, setCountrycode] = useState('+51');
+  // const [formattedValue, setFormattedValue] = useState("");
 
+  // const phoneInput = useRef<PhoneInput>(null);
 
   const onSignUpPressed = () => {
     const emailError = emailValidator(email);
     const passwordError = passwordValidator(password);
     const confirmpasswordError = passwordValidator(confirmpassword);
 
-    if(password === confirmpassword){
+    if (password === confirmpassword && password != '') {
       signup(email, password, id_celular, nombre, apellido, pais, celular);
-      console.log('password match')
+      console.log('password match');
+      Toast.show({
+        type: 'success',
+        text1: 'Loading',
+        text2: "Por favor espere el servidor......",
+      });
+    } else {
+      console.log('password does not match');
+      Toast.show({
+        type: 'error',
+        text1: 'Sorry',
+        text2: "Las contraseñas no coinciden",
+      });
     }
-    else{
-      console.log('password does not match')
-    }
-    
+
     // if (emailError || passwordError) {
     //   setEmail({ ...email, error: emailError })
     //   setPassword({ ...password, error: passwordError })
@@ -51,59 +65,95 @@ export default function LogInScreen({navigation}) {
   };
 
   return (
-    <Background>
-      <BackButton goBack={navigation.goBack} />
-      <Logo />
-      <Header>Create Account</Header>
-      <TextInput
-        label="Email"
-        returnKeyType="next"
-        value={email.value}
-        onChangeText={text => setEmail(text)}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-      />
-      <TextInput
-        label="Password"
-        returnKeyType="done"
-        value={password.value}
-        onChangeText={text => setPassword(text)}
-        error={!!password.error}
-        errorText={password.error}
-        secureTextEntry
-      />
-      <TextInput
-        label="Confirm Password"
-        returnKeyType="done"
-        value={confirmpassword.value}
-        onChangeText={text => setconfirmPassword(text)}
-        error={!!confirmpassword.error}
-        errorText={confirmpassword.error}
-        secureTextEntry
-      />
-      {/* <View style={styles.forgotPassword}>
+    <ScrollView>
+      <Background>
+        <BackButton goBack={navigation.goBack} />
+        <Logo />
+        <Header>Create Account</Header>
+        <TextInput
+          label="Email"
+          returnKeyType="next"
+          value={email}
+          onChangeText={text => setEmail(text)}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+        />
+        <TextInput
+          label="Password"
+          returnKeyType="done"
+          value={password}
+          onChangeText={text => setPassword(text)}
+          error={!!password.error}
+          errorText={password.error}
+          secureTextEntry
+        />
+        <TextInput
+          label="Confirm Password"
+          returnKeyType="done"
+          value={confirmpassword}
+          onChangeText={text => setconfirmPassword(text)}
+          error={!!confirmpassword.error}
+          errorText={confirmpassword.error}
+          secureTextEntry
+        />
+        <TextInput
+          label="Nombre"
+          returnKeyType="next"
+          value={nombre}
+          onChangeText={text => setNombre(text)}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+        />
+        <TextInput
+          label="Apellido"
+          returnKeyType="next"
+          value={apellido}
+          onChangeText={text => setApellido(text)}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+        />
+        <PhoneInput
+            // ref={phoneInput}
+            defaultValue={""}
+            defaultCode="PE"
+            layout="first"
+            onChangeText={(text) => {
+              // setCeluar(countrycode+text);
+            }}
+            onChangeCountry={(country)=>{
+              setPais(country.cca2);
+              // setCountrycode('+'+country.callingCode);
+            }}
+            onChangeFormattedText={(text) => {
+              setCeluar(text);
+            }}
+            withDarkTheme
+            withShadow
+          />
+        {/* <View style={styles.forgotPassword}>
         <TouchableOpacity
           onPress={() => navigation.navigate('ResetPasswordScreen')}
         >
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
       </View> */}
-      <Button
-        mode="contained"
-        onPress={onSignUpPressed}>
-        Sign Up
-      </Button>
-      <View style={styles.row}>
-        <Text>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('LogIn')}>
-          <Text style={styles.link}>Log In</Text>
-        </TouchableOpacity>
-      </View>
-    </Background>
+        <Button mode="contained" onPress={onSignUpPressed}>
+          Sign Up
+        </Button>
+        <View style={styles.row}>
+          <Text>Already have an account? </Text>
+          <TouchableOpacity onPress={() => navigation.replace('LogIn')}>
+            <Text style={styles.link}>Log In</Text>
+          </TouchableOpacity>
+        </View>
+      </Background>
+    </ScrollView>
   );
 }
 

@@ -29,6 +29,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-numeric-input": "^1.9.1",
     "react-native-paper": "^4.4.1",
+    "react-native-phone-number-input": "^2.1.0",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",

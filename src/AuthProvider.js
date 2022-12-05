@@ -10,19 +10,29 @@ export const AuthProvider = ({children}) => {
 
   const {mutate: login} = useMutation(API.login, {
     onSuccess: data => {
-      Toast.show({
-        type: 'success',
-        text1: 'Welcome',
-        text2: "Successfully login" + '👋',
-      });
-      setUserProfile(data);
-      setLoading(false);
+      if(data.error==false){
+        Toast.show({
+          type: 'success',
+          text1: 'Welcome',
+          text2: "Successfully login" + '👋',
+        });
+        setUserProfile(data);
+        setLoading(false);
+      }
+      else{
+        Toast.show({
+          type: 'error',
+          text1: 'Sorry',
+          text2: data.msg,
+        });
+      }
+      
     },
     onError: data => {
       Toast.show({
         type: 'error',
         text1: 'Sorry',
-        text2: data.message,
+        text2: data.msg,
       });
       setLoading(false);
     },
@@ -30,12 +40,23 @@ export const AuthProvider = ({children}) => {
 
   const {mutate: signup} = useMutation(API.signup, {
     onSuccess: data => {
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: data.message,
-      });
-      setLoading(false);
+      if(data.error==false){
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: data.msg,
+        });
+        setLoading(false);
+      }
+      else{
+        Toast.show({
+          type: 'error',
+          text1: 'Sorry',
+          text2: "por favor inserte todos los campos correctamente",
+          // text2: data.error_msg.email+data.error_msg.password+data.error_msg.celular,
+        });
+      }
+      
     },
     onError: data => {
       Toast.show({

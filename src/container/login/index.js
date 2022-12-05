@@ -1,6 +1,9 @@
 import React, {useState, useContext} from 'react';
 import {TouchableOpacity, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
+import Toast from 'react-native-toast-message';
+
+
 import Background from '../../components/Background';
 import Logo from '../../components/Logo';
 import Header from '../../components/Header';
@@ -22,6 +25,11 @@ export default function LogInScreen({navigation}) {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
     login(email, password, idcelular);
+    Toast.show({
+      type: 'success',
+      text1: 'Loading',
+      text2: "Por favor espere el servidor......",
+    });
     // if (emailError || passwordError) {
     //   setEmail({ ...email, error: emailError })
     //   setPassword({ ...password, error: passwordError })
