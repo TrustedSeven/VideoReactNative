@@ -31,6 +31,7 @@ const SuccessScreen = ({navigation}) => {
   const [id_celular, setId_celular] = useState('a67b30da35525c49');
   const [v_token, setV_token] = useState();
   const [Event, setEvent] = useState();
+  const [jsonData, setJsonData] = useState([]);
 
 
   // const getdeviceId = () => {
@@ -38,7 +39,6 @@ const SuccessScreen = ({navigation}) => {
   //   setIdcel(uniqueId);
   //   setId_celular(idcel._z);
   // };
-  
   useEffect(() => {
     if(config !== null) {
       Load();
@@ -62,14 +62,14 @@ const SuccessScreen = ({navigation}) => {
     // setKeyval(keyval+1);
     // console.log(decrypt(config.v_token, id_celular));
     const data = (decrypt(config.eventos, id_celular));
-    const jsonData = JSON.parse(data);
+    const newJsonData = JSON.parse(data);
     let newData = [];
-    Object.keys(jsonData).forEach((key, idx) => {
-      newData.push({key: idx+1, value: jsonData[key]['nombre_evento']});
+    Object.keys(newJsonData).forEach((key, idx) => {
+      newData.push({key: idx+1, value: newJsonData[key]['nombre_evento']});
       // console.log(jsonData[key]['id_evento']);
     })
     setData1(newData);
-    console.log(jsonData[2]);
+    setJsonData(newJsonData);
     // console.log(jsonData[0]);
     // console.log(jsonData[0]);
   }
@@ -108,16 +108,29 @@ const SuccessScreen = ({navigation}) => {
   const Process = async () => {
     console.log('----------------Before Start------------------');
     console.log(singleFile)
-
-    FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*').then(uri => {
-      FFmpegKitConfig.getSafParameterForWrite(uri).then(safUrl1 => {
-          FFmpegKit.executeAsync(`-ss 0 -t 5 -an -i ${singleFile} -y -filter_complex "[0]split[b][c];[c]reverse[r];[b][r]concat" ${safUrl1}`);
+    console.log(selected)
+    if(selected) {
+      const selectedData = jsonData.filter((val) => {
+        return val['nombre_evento'] == selected;
+      })
+      // console.log(selectedData[0]["cmd"])  
+      // selectedData.forEach((v) => {console.log(v); console.log('-----------------')})
+      let cmd1 = selectedData[0]["cmd"]['efecto 1'];
+      cmd1 = cmd1.replace("input.mp4", singleFile);
+      
+      FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*').then(uri => {
+        FFmpegKitConfig.getSafParameterForWrite(uri).then(safUrl1 => {
+            cmd1 = cmd1.replace("out.mp4", safUrl1);
+            FFmpegKit.executeAsync(cmd1);
+        });
       });
-    });
-
+  
+    }
+   
+    
     console.log('--------End---------');
 
-    navigation.push('VideoPlay');
+    // navigation.push('VideoPlay');
   };
   
 
@@ -143,8 +156,7 @@ const SuccessScreen = ({navigation}) => {
             Load Events
           </Button> */}
           <SelectList
-            setSelected={val =>setSelected(val)
-              }
+            setSelected={val =>setSelected(val)}
             data={data1}
             save="value"
           />
