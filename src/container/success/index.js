@@ -13,7 +13,6 @@ import {SelectList} from 'react-native-dropdown-select-list';
 import NumericInput from 'react-native-numeric-input';
 import {LogLevel, FFmpegKit, FFmpegKitConfig} from 'ffmpeg-kit-react-native';
 import base64 from 'react-native-base64'
-import DeviceInfo from 'react-native-device-info';
 
 
 import Button from '../../components/Button';
@@ -26,24 +25,21 @@ const SuccessScreen = ({navigation}) => {
   const [selected, setSelected] = useState('');
   const {config } = useContext(AuthContext);
   const {userProfile } = useContext(AuthContext);
-  const [keyval, setKeyval] = useState(2);
-  // const [idcel, setIdcel] = useState('');
-  const [id_celular, setId_celular] = useState('a67b30da35525c49');
-  const [v_token, setV_token] = useState();
-  const [Event, setEvent] = useState();
+  const [id_celular, setId_celular] = useState(null);
   const [jsonData, setJsonData] = useState([]);
 
-
-  // const getdeviceId = () => {
-  //   var uniqueId = DeviceInfo.getUniqueId();
-  //   setIdcel(uniqueId);
-  //   setId_celular(idcel._z);
-  // };
+  
   useEffect(() => {
     if(config !== null) {
       Load();
     }
   }, [config]);
+  useEffect(() => {
+    if(userProfile !== null){
+      setId_celular(userProfile.user_profile.id_celular);
+      console.log(userProfile.user_profile.id_celular);
+    }
+  }, [userProfile]);
 
   function decrypt(texto, clave) {
     var result = '';
@@ -58,37 +54,22 @@ const SuccessScreen = ({navigation}) => {
   }
 
   const Load  = () =>{
-    // data1.push({key:'keyval', value:keyval});
-    // setKeyval(keyval+1);
-    // console.log(decrypt(config.v_token, id_celular));
     const data = (decrypt(config.eventos, id_celular));
     const newJsonData = JSON.parse(data);
     let newData = [];
     Object.keys(newJsonData).forEach((key, idx) => {
       newData.push({key: idx+1, value: newJsonData[key]['nombre_evento']});
-      // console.log(jsonData[key]['id_evento']);
     })
     setData1(newData);
     setJsonData(newJsonData);
-    // console.log(jsonData[0]);
-    // console.log(jsonData[0]);
   }
-
-  // useEffect(() => {
-  //   if(selected == "Load Options"){
-  //     data1.push({key:'2', value:config.v_token})
-  //   }
-  // }, [selected]);
 
 
   const [data1, setData1] = useState([{key: 1, value: 'Event Options'}])
 
-  // const data1 = [
-    
-  // ];
-
+  
   const data2 = [
-    {key: 1, value: 'Load Options'},
+    {key: 1, value: 'Audio Options'},
   ];
 
   const [singleFile, setSingleFile] = useState();
@@ -113,8 +94,6 @@ const SuccessScreen = ({navigation}) => {
       const selectedData = jsonData.filter((val) => {
         return val['nombre_evento'] == selected;
       })
-      // console.log(selectedData[0]["cmd"])  
-      // selectedData.forEach((v) => {console.log(v); console.log('-----------------')})
       let cmd1 = selectedData[0]["cmd"]['efecto 1'];
       cmd1 = cmd1.replace("input.mp4", singleFile);
       
@@ -140,21 +119,6 @@ const SuccessScreen = ({navigation}) => {
         {/* <BackButton goBack={navigation.goBack} /> */}
         <View style={styles.selectEvent}>
           <Header>Select Events</Header>
-          {/* <TouchableOpacity onPress={
-            // data1.push({key:'4', value:config.v_token})
-            // console.log(config.v_token)
-            Load
-            }>
-            <Text style={styles.link}>Load Events</Text>
-          </TouchableOpacity> */}
-          {/* <Button
-            style={{width: '50%'}}
-            mode="contained"
-            onPress={() => {
-              Load
-            }}>
-            Load Events
-          </Button> */}
           <SelectList
             setSelected={val =>setSelected(val)}
             data={data1}
