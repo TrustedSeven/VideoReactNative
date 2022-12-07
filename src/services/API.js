@@ -11,19 +11,21 @@ const apiPrefix = "/api/v1";
 class API {
   login = async (params) => {
     console.log(params);
-    // const response = await apiInstance.post(`${apiPrefix}/user/login`, params);
     const response = await apiInstance.post(`/iniciarSession`, params);
-    // const response = { data: { result: true } };
     console.log(response.data);
     return response.data;
   };
   signup = async (params) => {
     console.log(params);
-    // const response = await apiInstance.post(`${apiPrefix}/user/login`, params);
     const response = await apiInstance.post(`/registrar`, params);
-    // const response = { data: { result: true } };
     console.log(response.data);
     return response.data;
   }
+  register = async (params) =>{
+    console.log(params);
+    const response = await apiInstance.post(`/config` , params);
+    console.log(response.data);
+    return response.data;
+  };
 }
 export default new API();

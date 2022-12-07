@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import { AuthContext } from '../AuthProvider';
 import LogInScreen from '../container/login';
 import SignUpScreen from '../container/signup';
@@ -13,6 +14,8 @@ const Stack = createNativeStackNavigator();
 const MainNavigator = ({ parentNavigator }) => {
     const { userProfile } = useContext(AuthContext);
     const [isLoading, setLoading] = useState(true);
+    const {config} = useContext(AuthContext);
+
 
     // useEffect(() => {
     //     setTimeout(() => {

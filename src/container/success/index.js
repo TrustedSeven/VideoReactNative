@@ -1,52 +1,94 @@
 import styles from './styles';
-import React, {Component, useEffect, useState} from 'react';
+import React, {Component, useEffect, useState, useContext} from 'react';
 import {
-  StyleSheet,
   View,
   Alert,
   Text,
   Input,
   PermissionsAndroid,
-  Platform,
-  SwipeableListView,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {RNCamera} from 'react-native-camera';
 import {SelectList} from 'react-native-dropdown-select-list';
-import DocumentPicker from 'react-native-document-picker';
-import {Video} from 'react-native-video';
 import NumericInput from 'react-native-numeric-input';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import VideoPlayer from 'react-native-video-player';
 import {LogLevel, FFmpegKit, FFmpegKitConfig} from 'ffmpeg-kit-react-native';
+import base64 from 'react-native-base64'
+import DeviceInfo from 'react-native-device-info';
+
 
 import Button from '../../components/Button';
 import Background from '../../components/Background';
 import BackButton from '../../components/BackButton'
-import CameraButton from '../../components/CameraButton';
-import {theme} from '../../core/theme';
 import Header from '../../components/Header';
+import {AuthContext} from '../../AuthProvider'
 
 const SuccessScreen = ({navigation}) => {
   const [selected, setSelected] = useState('');
+  const {config } = useContext(AuthContext);
+  const {userProfile } = useContext(AuthContext);
+  const [keyval, setKeyval] = useState(2);
+  // const [idcel, setIdcel] = useState('');
+  const [id_celular, setId_celular] = useState('a67b30da35525c49');
+  const [v_token, setV_token] = useState();
+  const [Event, setEvent] = useState();
 
-  const data = [
-    {key: '1', value: 'Event 1'},
-    {key: '2', value: 'Event 2'},
-    {key: '3', value: 'Event 3'},
-    {key: '4', value: 'Event 4'},
-    {key: '5', value: 'Event 5'},
-    {key: '6', value: 'Event 1'},
-    {key: '7', value: 'Event 2'},
-    {key: '8', value: 'Event 3'},
-    {key: '9', value: 'Event 4'},
-    {key: '10', value: 'Event 5'},
-    {key: '11', value: 'Event 1'},
-    {key: '12', value: 'Event 2'},
-    {key: '13', value: 'Event 3'},
-    {key: '14', value: 'Event 4'},
-    {key: '15', value: 'Event 5'},
+
+  // const getdeviceId = () => {
+  //   var uniqueId = DeviceInfo.getUniqueId();
+  //   setIdcel(uniqueId);
+  //   setId_celular(idcel._z);
+  // };
+  
+  useEffect(() => {
+    if(config !== null) {
+      Load();
+    }
+  }, [config]);
+
+  function decrypt(texto, clave) {
+    var result = '';
+    var string = base64.decode(texto);
+    for (var i = 0; i < string.length; i++) {
+      var char = string.substring(i, i + 1);
+      var keychar = clave.substring(i % clave.length, i + 1);
+      char = String.fromCharCode(char.charCodeAt(0) - keychar.charCodeAt(0));
+      result += char;
+    }
+    return result;
+  }
+
+  const Load  = () =>{
+    // data1.push({key:'keyval', value:keyval});
+    // setKeyval(keyval+1);
+    // console.log(decrypt(config.v_token, id_celular));
+    const data = (decrypt(config.eventos, id_celular));
+    const jsonData = JSON.parse(data);
+    let newData = [];
+    Object.keys(jsonData).forEach((key, idx) => {
+      newData.push({key: idx+1, value: jsonData[key]['nombre_evento']});
+      // console.log(jsonData[key]['id_evento']);
+    })
+    setData1(newData);
+    console.log(jsonData[2]);
+    // console.log(jsonData[0]);
+    // console.log(jsonData[0]);
+  }
+
+  // useEffect(() => {
+  //   if(selected == "Load Options"){
+  //     data1.push({key:'2', value:config.v_token})
+  //   }
+  // }, [selected]);
+
+
+  const [data1, setData1] = useState([{key: 1, value: 'Event Options'}])
+
+  // const data1 = [
+    
+  // ];
+
+  const data2 = [
+    {key: 1, value: 'Load Options'},
   ];
 
   const [singleFile, setSingleFile] = useState();
@@ -56,56 +98,19 @@ const SuccessScreen = ({navigation}) => {
   const [recsec, setRecsec] = useState(0);
 
   const SingleFilePicker = async () => {
-    // try {
-    //   console.log('BEFORE PICKET >>>>>>>>>>>>>>>>>>>>');
-    //   // const file = await DocumentPicker.pick({
-    //   //   type: [DocumentPicker.types.pdf],
-    //   //   // copyTo: 'documentDirectory',
-    //   // });
-    //   const res = await DocumentPicker.pick();
-    //   console.log('RESULT PICKET >>>>>>>>>>>>>>>>>>>>', res);
-
-    //   // this.setState({ singleFileOBJ: res });
-    //   setSingleFile(res);
-    // } catch (err) {
-    //   console.log('FAILD PICKET >>>>>>>>>>>>>>>>>>>>', err);
-
-    //   if (DocumentPicker.isCancel(err)) {
-    //     Alert.alert('No file Chosen');
-    //     setSingleFile();
-    //   } else {
-    //     Alert.alert('Unknown Error: ' + JSON.stringify(err));
-    //     throw err;
-    //   }
-    // }
     FFmpegKitConfig.selectDocumentForRead('*/*').then(uri => {
       FFmpegKitConfig.getSafParameterForRead(uri).then(safUrl => {
-        console.log(safUrl);
-        // FFmpegKit.executeAsync(`-i ${safUrl} -c:v mpeg4 file2.mp4`);
         setSingleFile(safUrl);
+        console.log(singleFile);
       });
     });
   };
   const Process = async () => {
-    // FFmpegKit.execute('-i file1.mp4 -c:v mpeg4 file2.mp4').then(result => console.log(`FFmpeg process exited with rc=${result}.`));
-
     console.log('----------------Before Start------------------');
     console.log(singleFile)
-    // setUri(singleFile[0]);
-    // console.log(uri);
-    
-    // FFmpegKitConfig.selectDocumentForRead('*/*').then(uri => {
-    //   FFmpegKitConfig.getSafParameterForRead(uri).then(safUrl => {
-    //     console.log(safUrl);
-    //     // FFmpegKit.executeAsync(`-i ${safUrl} -c:v mpeg4 file2.mp4`);
-    //   });
-    // });
-
-    // "ffmpeg -ss 0 -t 5 -an -i input.mp4 -y -filter_complex "[0]split[b][c];[c]reverse[r];[b][r]concat" out.mp4"
 
     FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*').then(uri => {
       FFmpegKitConfig.getSafParameterForWrite(uri).then(safUrl1 => {
-          // FFmpegKit.executeAsync(`-i ${singleFile} -c:v mpeg4 ${safUrl1}`);
           FFmpegKit.executeAsync(`-ss 0 -t 5 -an -i ${singleFile} -y -filter_complex "[0]split[b][c];[c]reverse[r];[b][r]concat" ${safUrl1}`);
       });
     });
@@ -114,16 +119,33 @@ const SuccessScreen = ({navigation}) => {
 
     navigation.push('VideoPlay');
   };
+  
 
   return (
     <ScrollView style={styles.background}>
       <Background>
         {/* <BackButton goBack={navigation.goBack} /> */}
         <View style={styles.selectEvent}>
-          <Header>Select Edit Option</Header>
+          <Header>Select Events</Header>
+          {/* <TouchableOpacity onPress={
+            // data1.push({key:'4', value:config.v_token})
+            // console.log(config.v_token)
+            Load
+            }>
+            <Text style={styles.link}>Load Events</Text>
+          </TouchableOpacity> */}
+          {/* <Button
+            style={{width: '50%'}}
+            mode="contained"
+            onPress={() => {
+              Load
+            }}>
+            Load Events
+          </Button> */}
           <SelectList
-            setSelected={val => setSelected(val)}
-            data={data}
+            setSelected={val =>setSelected(val)
+              }
+            data={data1}
             save="value"
           />
         </View>
@@ -139,10 +161,6 @@ const SuccessScreen = ({navigation}) => {
         <Text>File URI: {singleFile.uri ? singleFile.uri : ''}</Text> */}
         </View>
         <View style={styles.buttons}>
-          {/* <CameraButton
-          onPress={() => {
-            navigation.push('Camera');
-          }}></CameraButton> */}
           <Button
             style={{width: '50%'}}
             mode="contained"
@@ -160,20 +178,24 @@ const SuccessScreen = ({navigation}) => {
         </View>
         <View style={styles.secondpicker}>
           <Header>Seconds to Start  </Header>
-          <NumericInput onChange={value => console.log(value)} />
+          <NumericInput onChange={value => {
+            setStartsec(value)
+            }} />
         </View>
         <View style={styles.secondpicker}>
           <Header>Recording Time    </Header>
           <NumericInput
             style={{marginLeft: 10}}
-            onChange={value => console.log(value)}
+            onChange={value => {
+              setRecsec(value)
+            }}
           />
         </View>
         <View style={styles.selectEvent}>
           <Header>Select Audio</Header>
           <SelectList
             setSelected={val => setSelected(val)}
-            data={data}
+            data={data2}
             save="value"
           />
         </View>

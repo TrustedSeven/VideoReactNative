@@ -3,6 +3,8 @@ import {TouchableOpacity, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import DeviceInfo from 'react-native-device-info';
+import base64 from 'react-native-base64'
+
 
 import Background from '../../components/Background';
 import Logo from '../../components/Logo';
@@ -21,6 +23,18 @@ export default function LogInScreen({navigation}) {
   const [password, setPassword] = useState('');
   const [idcelular, setIdcelular] = useState('xxxxxx');
   const [idcel, setIdcel] = useState('');
+
+  function decrypt(texto, clave) {
+    var result = '';
+    var string = base64.decode(texto);
+    for (var i = 0; i < string.length; i++) {
+      var char = string.substring(i, i + 1);
+      var keychar = clave.substring(i % clave.length, i + 1);
+      char = String.fromCharCode(char.charCodeAt(0) - keychar.charCodeAt(0));
+      result += char;
+    }
+    return result;
+  }
 
   const getdeviceId = () => {
     var uniqueId = DeviceInfo.getUniqueId();

@@ -5,6 +5,7 @@ import Toast from 'react-native-toast-message';
 import PhoneInput from "react-native-phone-number-input";
 import DeviceInfo from 'react-native-device-info';
 
+
 import Background from '../../components/Background';
 import Logo from '../../components/Logo';
 import Header from '../../components/Header';
@@ -27,10 +28,6 @@ export default function LogInScreen({navigation}) {
   const [pais, setPais] = useState('PE');
   const [celular, setCeluar] = useState('');
   const [idcel, setIdcel] = useState('');
-  // const [countrycode, setCountrycode] = useState('+51');
-  // const [formattedValue, setFormattedValue] = useState("");
-
-  // const phoneInput = useRef<PhoneInput>(null);
 
   const getdeviceId = () => {
     var uniqueId = DeviceInfo.getUniqueId();
@@ -131,16 +128,13 @@ export default function LogInScreen({navigation}) {
           keyboardType="email-address"
         />
         <PhoneInput
-            // ref={phoneInput}
             defaultValue={""}
             defaultCode="PE"
             layout="first"
             onChangeText={(text) => {
-              // setCeluar(countrycode+text);
             }}
             onChangeCountry={(country)=>{
               setPais(country.cca2);
-              // setCountrycode('+'+country.callingCode);
             }}
             onChangeFormattedText={(text) => {
               setCeluar(text);
