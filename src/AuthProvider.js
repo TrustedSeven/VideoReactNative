@@ -1,6 +1,5 @@
 import React, {createContext, useState, useEffect} from 'react';
 import Toast from 'react-native-toast-message';
-import base64 from 'react-native-base64';
 
 import API from './services/API';
 import {useMutation} from 'react-query';
@@ -14,32 +13,12 @@ export const AuthProvider = ({children}) => {
   const [token, setToken] = useState();
 
 
-  function decrypt(texto, clave) {
-    var result = '';
-    var string = base64.decode(texto);
-    for (var i = 0; i < string.length; i++) {
-      var char = string.substring(i, i + 1);
-      var keychar = clave.substring(i % clave.length, i + 1);
-      char = String.fromCharCode(char.charCodeAt(0) - keychar.charCodeAt(0));
-      result += char;
-    }
-    return result;
-  }
-
   useEffect(() => {
     if (token !== undefined && id_user !== undefined) {
       register({id_user, token});
     }
   }, [token]);
-
-  // useEffect(() => {
-  //   // console.log(decrypt(config.v_token, userProfile.user_profile.id_user));
-  //   console.log(config.v_token);
-  // }, [config]);
-
-
-
-  
+ 
 
   const {mutate: login} = useMutation(API.login, {
     onSuccess: data => {

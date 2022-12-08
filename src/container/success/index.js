@@ -71,6 +71,7 @@ const SuccessScreen = ({navigation}) => {
         RootDir = fs.dirs.MusicDir;
       }
       const targetPath = RootDir + '/file_' + file[1];
+      console.log(targetPath);
       fs.exists(targetPath)
         .then((exist) => {
           if(!exist) {
@@ -143,7 +144,6 @@ const SuccessScreen = ({navigation}) => {
   useEffect(() => {
     if (userProfile !== null) {
       setId_celular(userProfile.user_profile.id_celular);
-      console.log(userProfile.user_profile.id_celular);
     }
   }, [userProfile]);
 
@@ -201,17 +201,19 @@ const SuccessScreen = ({navigation}) => {
 
       FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*').then(
         uri => {
+          console.log(uri);
           FFmpegKitConfig.getSafParameterForWrite(uri).then(safUrl1 => {
             cmd1 = cmd1.replace('out.mp4', safUrl1);
-            FFmpegKit.executeAsync(cmd1);
+            FFmpegKit.executeAsync(cmd1)
+              .then(res => {
+                navigation.push('VideoPlay', {message: uri});
+                console.log('--------End---------');
+
+              });
           });
         },
       );
     }
-
-    console.log('--------End---------');
-
-    // navigation.push('VideoPlay');
   };
 
   return (
