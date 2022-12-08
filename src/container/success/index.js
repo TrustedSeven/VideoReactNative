@@ -12,30 +12,136 @@ import {
 import {SelectList} from 'react-native-dropdown-select-list';
 import NumericInput from 'react-native-numeric-input';
 import {LogLevel, FFmpegKit, FFmpegKitConfig} from 'ffmpeg-kit-react-native';
-import base64 from 'react-native-base64'
-
+import base64 from 'react-native-base64';
+import RNFetchBlob from 'rn-fetch-blob';
 
 import Button from '../../components/Button';
 import Background from '../../components/Background';
-import BackButton from '../../components/BackButton'
+import BackButton from '../../components/BackButton';
 import Header from '../../components/Header';
-import {AuthContext} from '../../AuthProvider'
+import {AuthContext} from '../../AuthProvider';
 
 const SuccessScreen = ({navigation}) => {
   const [selected, setSelected] = useState('');
-  const {config } = useContext(AuthContext);
-  const {userProfile } = useContext(AuthContext);
+  const {config} = useContext(AuthContext);
+  const {userProfile} = useContext(AuthContext);
   const [id_celular, setId_celular] = useState(null);
   const [jsonData, setJsonData] = useState([]);
+  const fileUrl = 'https://social360.app/';
 
-  
+  const downloadFile = () => {
+    if (jsonData.length === 0) {
+      return;
+    }
+
+    let files = [];
+    jsonData.forEach(data => {
+      data['archivos'].forEach(arc => {
+        let src = [];
+        if (arc['tipoArchivo'] === 1) {
+          src.push('imagen');
+          src.push(arc['idArchivo'] + '.png');
+        } else {
+          src.push('audio');
+          src.push(arc['idArchivo'] + '.mp3');
+        }
+        files.push(src);
+      });
+    });
+
+    if (files.length === 0) {
+      return;
+    }
+    // Get today's date to add the time suffix in filename
+    let date = new Date();
+    // File URL which we want to download
+    let FILE_URL = fileUrl;
+    // Function to get extention of the file url
+    let file_ext = getFileExtention(FILE_URL);
+
+    file_ext = '.' + file_ext[0];
+
+    // config: To get response by passing the downloading related options
+    // fs: Root directory path to download
+    const {config, fs} = RNFetchBlob;
+
+    files.forEach(file => {
+      let RootDir = fs.dirs.PictureDir;
+      if (file[0] === 'audio') {
+        RootDir = fs.dirs.MusicDir;
+      }
+      const targetPath = RootDir + '/file_' + file[1];
+      fs.exists(targetPath)
+        .then((exist) => {
+          if(!exist) {
+            let options = {
+              fileCache: true,
+              addAndroidDownloads: {
+                path: targetPath,
+                description: 'downloading file...',
+                notification: true,
+                // useDownloadManager works with Android only
+                useDownloadManager: true,
+              },
+            };
+            config(options)
+              .fetch('GET', fileUrl + file[0] + '/' + file[1])
+              .then(res => {
+                // Alert after successful downloading
+                console.log('res -> ', JSON.stringify(res));
+              });
+          }
+        })
+    });
+  };
+
+  const getFileExtention = fileUrl => {
+    // To get the file extension
+    return /[.]/.exec(fileUrl) ? /[^.]+$/.exec(fileUrl) : undefined;
+  };
+
+  const checkPermission = async () => {
+    if (Platform.OS === 'ios') {
+      downloadFile();
+    } else {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Storage Permission Required',
+            message:
+              'Application needs access to your storage to download File',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          // Start downloading
+          downloadFile();
+          console.log('Storage Permission Granted.');
+        } else {
+          // If permission denied then show alert
+          Alert.alert('Error', 'Storage Permission Not Granted');
+        }
+      } catch (err) {
+        // To handle permission related exception
+        console.log('++++' + err);
+      }
+    }
+  };
+
   useEffect(() => {
-    if(config !== null) {
+    if (config !== null) {
       Load();
     }
   }, [config]);
+
   useEffect(() => {
-    if(userProfile !== null){
+    if (jsonData.length !== 0) {
+      checkPermission();
+    }
+  }, [jsonData.length]);
+
+  useEffect(() => {
+    if (userProfile !== null) {
       setId_celular(userProfile.user_profile.id_celular);
       console.log(userProfile.user_profile.id_celular);
     }
@@ -53,24 +159,20 @@ const SuccessScreen = ({navigation}) => {
     return result;
   }
 
-  const Load  = () =>{
-    const data = (decrypt(config.eventos, id_celular));
+  const Load = () => {
+    const data = decrypt(config.eventos, id_celular);
     const newJsonData = JSON.parse(data);
     let newData = [];
     Object.keys(newJsonData).forEach((key, idx) => {
-      newData.push({key: idx+1, value: newJsonData[key]['nombre_evento']});
-    })
+      newData.push({key: idx + 1, value: newJsonData[key]['nombre_evento']});
+    });
     setData1(newData);
     setJsonData(newJsonData);
-  }
+  };
 
+  const [data1, setData1] = useState([{key: 1, value: 'Event Options'}]);
 
-  const [data1, setData1] = useState([{key: 1, value: 'Event Options'}])
-
-  
-  const data2 = [
-    {key: 1, value: 'Audio Options'},
-  ];
+  const data2 = [{key: 1, value: 'Audio Options'}];
 
   const [singleFile, setSingleFile] = useState();
   const [uri, setUri] = useState();
@@ -88,30 +190,29 @@ const SuccessScreen = ({navigation}) => {
   };
   const Process = async () => {
     console.log('----------------Before Start------------------');
-    console.log(singleFile)
-    console.log(selected)
-    if(selected) {
-      const selectedData = jsonData.filter((val) => {
+    console.log(singleFile);
+    console.log(selected);
+    if (selected) {
+      const selectedData = jsonData.filter(val => {
         return val['nombre_evento'] == selected;
-      })
-      let cmd1 = selectedData[0]["cmd"]['efecto 1'];
-      cmd1 = cmd1.replace("input.mp4", singleFile);
-      
-      FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*').then(uri => {
-        FFmpegKitConfig.getSafParameterForWrite(uri).then(safUrl1 => {
-            cmd1 = cmd1.replace("out.mp4", safUrl1);
-            FFmpegKit.executeAsync(cmd1);
-        });
       });
-  
+      let cmd1 = selectedData[0]['cmd']['efecto 1'];
+      cmd1 = cmd1.replace('input.mp4', singleFile);
+
+      FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*').then(
+        uri => {
+          FFmpegKitConfig.getSafParameterForWrite(uri).then(safUrl1 => {
+            cmd1 = cmd1.replace('out.mp4', safUrl1);
+            FFmpegKit.executeAsync(cmd1);
+          });
+        },
+      );
     }
-   
-    
+
     console.log('--------End---------');
 
     // navigation.push('VideoPlay');
   };
-  
 
   return (
     <ScrollView style={styles.background}>
@@ -120,7 +221,7 @@ const SuccessScreen = ({navigation}) => {
         <View style={styles.selectEvent}>
           <Header>Select Events</Header>
           <SelectList
-            setSelected={val =>setSelected(val)}
+            setSelected={val => setSelected(val)}
             data={data1}
             save="value"
           />
@@ -153,17 +254,19 @@ const SuccessScreen = ({navigation}) => {
           </Button>
         </View>
         <View style={styles.secondpicker}>
-          <Header>Seconds to Start  </Header>
-          <NumericInput onChange={value => {
-            setStartsec(value)
-            }} />
+          <Header>Seconds to Start </Header>
+          <NumericInput
+            onChange={value => {
+              setStartsec(value);
+            }}
+          />
         </View>
         <View style={styles.secondpicker}>
-          <Header>Recording Time    </Header>
+          <Header>Recording Time </Header>
           <NumericInput
             style={{marginLeft: 10}}
             onChange={value => {
-              setRecsec(value)
+              setRecsec(value);
             }}
           />
         </View>
