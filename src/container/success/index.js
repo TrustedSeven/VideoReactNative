@@ -206,6 +206,7 @@ const SuccessScreen = ({navigation}) => {
             cmd1 = cmd1.replace('out.mp4', safUrl1);
             FFmpegKit.executeAsync(cmd1)
               .then(res => {
+                console.log(res);
                 navigation.push('VideoPlay', {message: uri});
                 console.log('--------End---------');
 
@@ -213,6 +214,12 @@ const SuccessScreen = ({navigation}) => {
           });
         },
       );
+
+      // const uri = await FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*');
+      // const safUrl1 = await FFmpegKitConfig.getSafParameterForWrite(uri);
+      // cmd1 = cmd1.replace('out.mp4', safUrl1);
+      // const res = await FFmpegKit.executeAsync(cmd1);
+      // console.log("success");
     }
   };
 
