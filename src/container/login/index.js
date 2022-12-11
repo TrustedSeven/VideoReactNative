@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {TouchableOpacity, StyleSheet, View} from 'react-native';
+import {TouchableOpacity, StyleSheet, View, Alert, Modal, Pressable} from 'react-native';
 import {Text} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import DeviceInfo from 'react-native-device-info';
@@ -23,6 +23,7 @@ export default function LogInScreen({navigation}) {
   const [password, setPassword] = useState('');
   const [idcelular, setIdcelular] = useState('xxxxxx');
   const [idcel, setIdcel] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
   function decrypt(texto, clave) {
     var result = '';
@@ -44,21 +45,22 @@ export default function LogInScreen({navigation}) {
   const onLoginPressed = () => {
     const emailError = emailValidator(email);
     const passwordError = passwordValidator(password);
-    console.log(idcelular);
+    // console.log(idcelular);
     if (email != '' && password != '') {
       login(email, password, idcelular);
-      Toast.show({
-        type: 'success',
-        text1: 'Loading',
-        text2: 'Por favor espere el servidor......',
-      });
+      // Toast.show({
+      //   type: 'success',
+      //   text1: 'Loading',
+      //   text2: 'Por favor espere el servidor......',
+      // });
     }
     else{
-      Toast.show({
-        type: 'error',
-        text1: 'Sorry',
-        text2: 'Por favor inserte correo electrónico y contraseña',
-      });
+      // Toast.show({
+      //   type: 'error',
+      //   text1: 'Sorry',
+      //   text2: 'Por favor inserte correo electrónico y contraseña',
+      // });
+      setModalVisible(true)
     }
 
     // if (emailError || passwordError) {
@@ -76,6 +78,27 @@ export default function LogInScreen({navigation}) {
   return (
     <Background>
       <BackButton goBack={navigation.goBack} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Por favor inserte correo electrónico y contraseña</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>OK</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       <Logo />
       <Header>Welcome back.</Header>
       <TextInput
@@ -139,4 +162,45 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: theme.colors.primary,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });

@@ -1,5 +1,6 @@
 import React, {createContext, useState, useEffect} from 'react';
 import Toast from 'react-native-toast-message';
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
 
 import API from './services/API';
 import {useMutation} from 'react-query';
@@ -11,6 +12,12 @@ export const AuthProvider = ({children}) => {
   const [config, setConfig] = useState(null);
   const [id_user, setId_user] = useState();
   const [token, setToken] = useState();
+  const [modalcontent, setModalcontent] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // useEffect(() => {
+  //   setModalVisible(true);
+  // }, [modalcontent]);
 
 
   useEffect(() => {
@@ -33,11 +40,13 @@ export const AuthProvider = ({children}) => {
         setToken(data.user_profile.token);
         setLoading(false);
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Sorry',
-          text2: data.msg,
-        });
+        // Toast.show({
+        //   type: 'error',
+        //   text1: 'Sorry--------',
+        //   text2: data.msg,
+        // });
+        setModalcontent(data.msg);
+        setModalVisible(true);
       }
     },
     onError: data => {
@@ -87,12 +96,24 @@ export const AuthProvider = ({children}) => {
         });
         setLoading(false);
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Sorry',
-          text2: 'por favor inserte todos los campos correctamente',
-          // text2: data.error_msg.email+data.error_msg.password+data.error_msg.celular,
-        });
+        // Toast.show({
+        //   type: 'error',
+        //   text1: 'Sorry',
+        //   text2: 'por favor inserte todos los campos correctamente',
+        //   // text2: data.error_msg.email+data.error_msg.password+data.error_msg.celular,
+        // });
+        if(data.error_msg.email && data.error_msg.celular){
+          setModalcontent(data.error_msg.email+" "+data.error_msg.celular);
+        }
+        else{
+          if(data.error_msg.email){
+            setModalcontent(data.error_msg.email);
+          }
+          else{
+            setModalcontent(data.error_msg.celular);
+          }
+        }
+        setModalVisible(true);
       }
     },
     onError: data => {
@@ -174,6 +195,71 @@ export const AuthProvider = ({children}) => {
       }}>
       {children}
       <Toast />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>{modalcontent}</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>OK</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </AuthContext.Provider>
   );
 };
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
+});
+
