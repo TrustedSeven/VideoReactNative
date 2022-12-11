@@ -24,18 +24,7 @@ export default function LogInScreen({navigation}) {
   const [idcelular, setIdcelular] = useState('xxxxxx');
   const [idcel, setIdcel] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-
-  function decrypt(texto, clave) {
-    var result = '';
-    var string = base64.decode(texto);
-    for (var i = 0; i < string.length; i++) {
-      var char = string.substring(i, i + 1);
-      var keychar = clave.substring(i % clave.length, i + 1);
-      char = String.fromCharCode(char.charCodeAt(0) - keychar.charCodeAt(0));
-      result += char;
-    }
-    return result;
-  }
+  const [loading, setLoading] = useState(false);
 
   const getdeviceId = () => {
     var uniqueId = DeviceInfo.getUniqueId();
@@ -47,6 +36,7 @@ export default function LogInScreen({navigation}) {
     const passwordError = passwordValidator(password);
     // console.log(idcelular);
     if (email != '' && password != '') {
+      // setLoading(true);
       login(email, password, idcelular);
       // Toast.show({
       //   type: 'success',
@@ -132,7 +122,7 @@ export default function LogInScreen({navigation}) {
         </TouchableOpacity>
       </View>
       <Button mode="contained" onPress={onLoginPressed}>
-        Login
+        {!loading?"Log In":"Loading..."}
       </Button>
       <View style={styles.row}>
         <Text>Don’t have an account? </Text>

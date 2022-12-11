@@ -30,11 +30,11 @@ export const AuthProvider = ({children}) => {
   const {mutate: login} = useMutation(API.login, {
     onSuccess: data => {
       if (data.error == false) {
-        Toast.show({
-          type: 'success',
-          text1: 'Welcome',
-          text2: 'Successfully login' + '👋',
-        });
+        // Toast.show({
+        //   type: 'success',
+        //   text1: 'Welcome',
+        //   text2: 'Successfully login' + '👋',
+        // });
         setUserProfile(data);
         setId_user(data.user_profile.id_user);
         setToken(data.user_profile.token);
@@ -89,12 +89,14 @@ export const AuthProvider = ({children}) => {
   const {mutate: signup} = useMutation(API.signup, {
     onSuccess: data => {
       if (data.error == false) {
-        Toast.show({
-          type: 'success',
-          text1: 'Success',
-          text2: data.msg,
-        });
-        setLoading(false);
+        // Toast.show({
+        //   type: 'success',
+        //   text1: 'Success',
+        //   text2: data.msg,
+        // });
+        // setLoading(false);
+        setModalcontent('Los datos se registraron correctamente, ya puede iniciar session.')
+        setModalVisible(true);
       } else {
         // Toast.show({
         //   type: 'error',

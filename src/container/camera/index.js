@@ -51,7 +51,7 @@ export default class CameraScreen extends Component {
       CameraRoll.save(data.uri, 'video')
         .then(onfulfilled => {
           console.log('+++++++++++ Saved Successfully!!!', onfulfilled);
-
+          console.log(data.uri);
           ToastAndroid.show(
             `VidApp Videos: ${onfulfilled}`,
             ToastAndroid.SHORT,
@@ -66,17 +66,6 @@ export default class CameraScreen extends Component {
       console.log('+++++++++++ ERROR!!!', error);
     }
 
-    //SAVE VIDEO
-    // const { config, fs, android } = RNFetchBlob;
-    // const str = data.uri;
-    // const fileName = str.substr(str.indexOf("Camera")+7, str.indexOf(".mp4"));
-    // const path = fs.dirs.CacheDir + '/Camera/'+fileName;
-
-    // const res = await fetch(str);
-    // const blob = await res.blob();
-
-    // console.log("BLOB", blob);
-
   };
 
   render() {
@@ -88,14 +77,10 @@ export default class CameraScreen extends Component {
           ref={camera => {
             this.camera = camera;
           }}
-          //   style={styles.preview}
           captureAudio={true}
-          //   ratio="16:9"
           style={{height: '100%'}}>
           <View style={{flexDirection: 'column', alignItems: 'center'}}>
-            {/* <TouchableOpacity onPress={this.recordVideo}>
-              <Text style={{backgroundColor: 'white'}}>Click</Text>
-            </TouchableOpacity> */}
+            
             <Text>{this.state.seconds}</Text>
             <CameraButton onPress={this.recordVideo}></CameraButton>
           </View>

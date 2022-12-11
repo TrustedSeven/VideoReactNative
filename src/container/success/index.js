@@ -30,6 +30,8 @@ const SuccessScreen = ({navigation}) => {
   const [jsonData, setJsonData] = useState([]);
   const [playurl, setPlayurl] = useState('');
   const fileUrl = 'https://social360.app/';
+  const [loading, setLoading] = useState(false);
+  // const targeturi = '';
 
   const downloadFile = () => {
     if (jsonData.length === 0) {
@@ -201,16 +203,18 @@ const SuccessScreen = ({navigation}) => {
       });
       let cmd1 = selectedData[0]['cmd']['efecto 1'];
       cmd1 = cmd1.replace('input.mp4', singleFile);
+      setLoading(true);
 
       FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*').then(
-        uri => {
-          console.log(uri);
-          FFmpegKitConfig.getSafParameterForWrite(uri).then(safUrl1 => {
+        targeturi => {
+          console.log(targeturi+"-------------------");
+          FFmpegKitConfig.getSafParameterForWrite(targeturi).then(safUrl1 => {
             cmd1 = cmd1.replace('out.mp4', safUrl1);
             FFmpegKit.executeAsync(cmd1)
               .then(res => {
+                setLoading(false)
                 console.log(res);
-                navigation.push('VideoPlay', {message: uri});
+                navigation.push('VideoPlay', {message: targeturi});
                 console.log('--------End---------');
 
               });
@@ -218,11 +222,12 @@ const SuccessScreen = ({navigation}) => {
         },
       );
 
-      // const uri = await FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*');
-      // const safUrl1 = await FFmpegKitConfig.getSafParameterForWrite(uri);
+      // const targeturi = await FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*');
+      // const safUrl1 = await FFmpegKitConfig.getSafParameterForWrite(targeturi);
       // cmd1 = cmd1.replace('out.mp4', safUrl1);
       // const res = await FFmpegKit.executeAsync(cmd1);
       // console.log("success");
+      // navigation.push('VideoPlay', {message: targeturi});
     }
   };
 
@@ -303,7 +308,7 @@ const SuccessScreen = ({navigation}) => {
             style={{width: '100%', marginBottom: 60}}
             mode="contained"
             onPress={Process}>
-            Process
+            {!loading?"Process":"Processing..."}
           </Button>
         </View>
       </Background>
