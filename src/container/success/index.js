@@ -14,6 +14,7 @@ import NumericInput from 'react-native-numeric-input';
 import {LogLevel, FFmpegKit, FFmpegKitConfig} from 'ffmpeg-kit-react-native';
 import base64 from 'react-native-base64';
 import RNFetchBlob from 'rn-fetch-blob';
+import VideoPlayer from 'react-native-video-player';
 
 import Button from '../../components/Button';
 import Background from '../../components/Background';
@@ -27,6 +28,7 @@ const SuccessScreen = ({navigation}) => {
   const {userProfile} = useContext(AuthContext);
   const [id_celular, setId_celular] = useState(null);
   const [jsonData, setJsonData] = useState([]);
+  const [playurl, setPlayurl] = useState('');
   const fileUrl = 'https://social360.app/';
 
   const downloadFile = () => {
@@ -182,6 +184,7 @@ const SuccessScreen = ({navigation}) => {
 
   const SingleFilePicker = async () => {
     FFmpegKitConfig.selectDocumentForRead('*/*').then(uri => {
+      setPlayurl(uri);
       FFmpegKitConfig.getSafParameterForRead(uri).then(safUrl => {
         setSingleFile(safUrl);
         console.log(singleFile);
@@ -261,6 +264,14 @@ const SuccessScreen = ({navigation}) => {
             }}>
             Take Video
           </Button>
+        </View>
+        <View style={{width: '100%'}}>
+          <VideoPlayer
+            style={{width: '100%'}}
+            video={{
+              uri: playurl,
+            }}
+          />
         </View>
         <View style={styles.secondpicker}>
           <Header>Seconds to Start      </Header>
