@@ -46,11 +46,11 @@ export default function LogInScreen({navigation}) {
       signup(email, password, id_celular, nombre, apellido, pais, celular);
       console.log(id_celular);
       console.log('password match');
-      Toast.show({
-        type: 'success',
-        text1: 'Loading',
-        text2: "Por favor espere el servidor......",
-      });
+      // Toast.show({
+      //   type: 'success',
+      //   text1: 'Loading',
+      //   text2: "Por favor espere el servidor......",
+      // });
     } else {
       console.log('password does not match');
       // Toast.show({

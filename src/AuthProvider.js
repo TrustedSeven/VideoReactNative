@@ -180,11 +180,11 @@ export const AuthProvider = ({children}) => {
             };
             await signup(userCred);
           } else {
-            Toast.show({
-              type: 'error',
-              text1: 'Sorry',
-              text2: 'Please enter user email and password.',
-            });
+            // Toast.show({
+            //   type: 'error',
+            //   text1: 'Sorry',
+            //   text2: 'Please enter user email and password.',
+            // });
           }
         },
         logout: async () => {
