@@ -6,7 +6,6 @@ import { theme } from '../core/theme'
 
 
 export default function Background({ children, state}) {
-  console.log(state);
   const [status, setStatus] = useState(false);
   useEffect(() => {
     setStatus(state);

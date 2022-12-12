@@ -5,8 +5,6 @@ const apiInstance = axios.create({
   baseURL: "https://social360.app/edit/api",
   timeout: 300000,
 });
-// https://social360.app/edit/api/iniciarSession
-const apiPrefix = "/api/v1";
 
 class API {
   login = async (params) => {

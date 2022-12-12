@@ -29,6 +29,7 @@
     "react-native-dropdown-select-list": "^2.0.2",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-modal": "^13.0.1",
     "react-native-numeric-input": "^1.9.1",
     "react-native-paper": "^4.4.1",
     "react-native-phone-number-input": "^2.1.0",

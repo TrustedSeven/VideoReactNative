@@ -1,5 +1,6 @@
 import React, {useState, useContext} from 'react';
-import {TouchableOpacity, StyleSheet, View, Alert, Modal, Pressable} from 'react-native';
+import {Alert, StyleSheet, Pressable, View,TouchableOpacity} from 'react-native';
+import Modal from "react-native-modal";
 import {shadow, Text} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import DeviceInfo from 'react-native-device-info';
@@ -23,9 +24,16 @@ export default function LogInScreen({navigation}) {
   const [password, setPassword] = useState('');
   const [idcelular, setIdcelular] = useState('xxxxxx');
   const [idcel, setIdcel] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
+  
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(false);
+
+  
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
   
 
   const getdeviceId = () => {
@@ -70,31 +78,13 @@ export default function LogInScreen({navigation}) {
   return (
     <Background state={status}>
       <BackButton goBack={navigation.goBack} />
-      <Modal
-        animationType="slide"
-        transparent={true}
-        onShow = {()=>{
-          console.log('-----------');
-          setStatus(true);
-        }}
-        // onDismiss = {()=>{
-        //   setStatus(false);
-        // }}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
+      <Modal isVisible={isModalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Por favor inserte correo electrónico y contraseña</Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => {setModalVisible(!modalVisible);
-              setStatus(false);
-              }}
-            >
+              onPress={toggleModal}>
               <Text style={styles.textStyle}>OK</Text>
             </Pressable>
           </View>

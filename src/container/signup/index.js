@@ -1,10 +1,17 @@
 import React, {useState, useContext, useRef} from 'react';
-import {TouchableOpacity, StyleSheet, View, ScrollView, Modal, Alert, Pressable} from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  ScrollView,
+  Alert,
+  Pressable,
+} from 'react-native';
+import Modal from "react-native-modal";
 import {Text} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
-import PhoneInput from "react-native-phone-number-input";
+import PhoneInput from 'react-native-phone-number-input';
 import DeviceInfo from 'react-native-device-info';
-
 
 import Background from '../../components/Background';
 import Logo from '../../components/Logo';
@@ -28,8 +35,13 @@ export default function LogInScreen({navigation}) {
   const [pais, setPais] = useState('PE');
   const [celular, setCeluar] = useState('');
   const [idcel, setIdcel] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
   const [status, setStatus] = useState(false);
+
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   const getdeviceId = () => {
     var uniqueId = DeviceInfo.getUniqueId();
@@ -41,7 +53,6 @@ export default function LogInScreen({navigation}) {
     const emailError = emailValidator(email);
     const passwordError = passwordValidator(password);
     const confirmpasswordError = passwordValidator(confirmpassword);
-    
 
     if (password === confirmpassword && password != '') {
       signup(email, password, id_celular, nombre, apellido, pais, celular);
@@ -76,33 +87,21 @@ export default function LogInScreen({navigation}) {
 
   return (
     <ScrollView>
-      <Background state = {status}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onShow = {() =>{
-          setStatus(true);
-        }}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Las contraseñas no coinciden</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() =>{ setModalVisible(!modalVisible);
-              setStatus(false);
-              }}
-            >
-              <Text style={styles.textStyle}>OK</Text>
-            </Pressable>
+      <Background state={status}>
+        <Modal isVisible={isModalVisible}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+              Las contraseñas no coinciden
+              </Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={toggleModal}>
+                <Text style={styles.textStyle}>OK</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
         <BackButton goBack={navigation.goBack} />
         <Logo />
         <Header>Create Account</Header>
@@ -110,7 +109,8 @@ export default function LogInScreen({navigation}) {
           label="Email"
           returnKeyType="next"
           value={email}
-          onChangeText={text => {setEmail(text);
+          onChangeText={text => {
+            setEmail(text);
             getdeviceId();
           }}
           autoCapitalize="none"
@@ -157,20 +157,19 @@ export default function LogInScreen({navigation}) {
           keyboardType="email-address"
         />
         <PhoneInput
-            defaultValue={""}
-            defaultCode="PE"
-            layout="first"
-            onChangeText={(text) => {
-            }}
-            onChangeCountry={(country)=>{
-              setPais(country.cca2);
-            }}
-            onChangeFormattedText={(text) => {
-              setCeluar(text);
-            }}
-            withDarkTheme
-            withShadow
-          />
+          defaultValue={''}
+          defaultCode="PE"
+          layout="first"
+          onChangeText={text => {}}
+          onChangeCountry={country => {
+            setPais(country.cca2);
+          }}
+          onChangeFormattedText={text => {
+            setCeluar(text);
+          }}
+          withDarkTheme
+          withShadow
+        />
         {/* <View style={styles.forgotPassword}>
         <TouchableOpacity
           onPress={() => navigation.navigate('ResetPasswordScreen')}
@@ -209,45 +208,46 @@ const styles = StyleSheet.create({
   link: {
     fontWeight: 'bold',
     color: theme.colors.primary,
-  },centeredView: {
+  },
+  centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: "#F194FF",
+    backgroundColor: '#F194FF',
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: '#2196F3',
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
-  }
+    textAlign: 'center',
+  },
 });

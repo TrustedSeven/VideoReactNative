@@ -1,6 +1,7 @@
 import React, {createContext, useState, useEffect} from 'react';
 import Toast from 'react-native-toast-message';
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
+import {Alert, StyleSheet, Text, Pressable, View, Button} from 'react-native';
+import Modal from "react-native-modal";
 
 import API from './services/API';
 import {useMutation} from 'react-query';
@@ -13,19 +14,21 @@ export const AuthProvider = ({children}) => {
   const [id_user, setId_user] = useState();
   const [token, setToken] = useState();
   const [modalcontent, setModalcontent] = useState();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   // useEffect(() => {
   //   setModalVisible(true);
   // }, [modalcontent]);
-
 
   useEffect(() => {
     if (token !== undefined && id_user !== undefined) {
       register({id_user, token});
     }
   }, [token]);
- 
 
   const {mutate: login} = useMutation(API.login, {
     onSuccess: data => {
@@ -95,7 +98,9 @@ export const AuthProvider = ({children}) => {
         //   text2: data.msg,
         // });
         // setLoading(false);
-        setModalcontent('Los datos se registraron correctamente, ya puede iniciar session.')
+        setModalcontent(
+          'Los datos se registraron correctamente, ya puede iniciar session.',
+        );
         setModalVisible(true);
       } else {
         // Toast.show({
@@ -104,14 +109,12 @@ export const AuthProvider = ({children}) => {
         //   text2: 'por favor inserte todos los campos correctamente',
         //   // text2: data.error_msg.email+data.error_msg.password+data.error_msg.celular,
         // });
-        if(data.error_msg.email && data.error_msg.celular){
-          setModalcontent(data.error_msg.email+" "+data.error_msg.celular);
-        }
-        else{
-          if(data.error_msg.email){
+        if (data.error_msg.email && data.error_msg.celular) {
+          setModalcontent(data.error_msg.email + ' ' + data.error_msg.celular);
+        } else {
+          if (data.error_msg.email) {
             setModalcontent(data.error_msg.email);
-          }
-          else{
+          } else {
             setModalcontent(data.error_msg.celular);
           }
         }
@@ -194,29 +197,23 @@ export const AuthProvider = ({children}) => {
             console.error(e);
           }
         },
-      }}>
+      }}
+      >
       {children}
       <Toast />
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
+      
+      <Modal isVisible={isModalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>{modalcontent}</Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
+              onPress={toggleModal}>
               <Text style={styles.textStyle}>OK</Text>
             </Pressable>
           </View>
         </View>
+        
       </Modal>
     </AuthContext.Provider>
   );
@@ -224,44 +221,43 @@ export const AuthProvider = ({children}) => {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: "#F194FF",
+    backgroundColor: '#F194FF',
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: '#2196F3',
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
-  }
+    textAlign: 'center',
+  },
 });
-
