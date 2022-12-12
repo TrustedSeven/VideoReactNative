@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react';
 import {TouchableOpacity, StyleSheet, View, Alert, Modal, Pressable} from 'react-native';
-import {Text} from 'react-native-paper';
+import {shadow, Text} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import DeviceInfo from 'react-native-device-info';
 import base64 from 'react-native-base64'
@@ -25,6 +25,8 @@ export default function LogInScreen({navigation}) {
   const [idcel, setIdcel] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(false);
+  
 
   const getdeviceId = () => {
     var uniqueId = DeviceInfo.getUniqueId();
@@ -66,11 +68,18 @@ export default function LogInScreen({navigation}) {
   };
 
   return (
-    <Background>
+    <Background state={status}>
       <BackButton goBack={navigation.goBack} />
       <Modal
         animationType="slide"
         transparent={true}
+        onShow = {()=>{
+          console.log('-----------');
+          setStatus(true);
+        }}
+        // onDismiss = {()=>{
+        //   setStatus(false);
+        // }}
         visible={modalVisible}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
@@ -82,7 +91,9 @@ export default function LogInScreen({navigation}) {
             <Text style={styles.modalText}>Por favor inserte correo electrónico y contraseña</Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => {setModalVisible(!modalVisible);
+              setStatus(false);
+              }}
             >
               <Text style={styles.textStyle}>OK</Text>
             </Pressable>

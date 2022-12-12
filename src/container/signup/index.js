@@ -29,6 +29,7 @@ export default function LogInScreen({navigation}) {
   const [celular, setCeluar] = useState('');
   const [idcel, setIdcel] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [status, setStatus] = useState(false);
 
   const getdeviceId = () => {
     var uniqueId = DeviceInfo.getUniqueId();
@@ -75,11 +76,14 @@ export default function LogInScreen({navigation}) {
 
   return (
     <ScrollView>
-      <Background>
+      <Background state = {status}>
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
+        onShow = {() =>{
+          setStatus(true);
+        }}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
@@ -90,7 +94,9 @@ export default function LogInScreen({navigation}) {
             <Text style={styles.modalText}>Las contraseñas no coinciden</Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() =>{ setModalVisible(!modalVisible);
+              setStatus(false);
+              }}
             >
               <Text style={styles.textStyle}>OK</Text>
             </Pressable>
