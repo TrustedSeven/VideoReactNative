@@ -21,6 +21,8 @@ import Background from '../../components/Background';
 import BackButton from '../../components/BackButton';
 import Header from '../../components/Header';
 import {AuthContext} from '../../AuthProvider';
+import MyView from '../../components/MyView';
+
 
 const SuccessScreen = ({navigation}) => {
   const [selected, setSelected] = useState('');
@@ -32,6 +34,7 @@ const SuccessScreen = ({navigation}) => {
   const [playurl, setPlayurl] = useState('');
   const fileUrl = 'https://social360.app/';
   const [loading, setLoading] = useState(false);
+  const [downloading, setDownloading] = useState(false);
   // const targeturi = '';
 
   const downloadFile = () => {
@@ -137,6 +140,7 @@ const SuccessScreen = ({navigation}) => {
   useEffect(() => {
     if (config !== null) {
       Load();
+      setDownloading(false);
     }
   }, [config]);
 
@@ -249,13 +253,15 @@ const SuccessScreen = ({navigation}) => {
             style={{width: '100%',}}
             mode="contained"
             onPress={()=>{
-              // console.log(userProfile);
+              setDownloading(true);
               register(userProfile.user_profile.id_user, userProfile.user_profile.token);
             }}>
             Refresh
           </Button>
         </View>
-        <View style={styles.filepicker}>
+        <MyView style={styles.filepicker}
+        hide = {downloading}
+        >
           <Header>Select Video File</Header>
 
           {/* <Text> File Name: {singleFile ? singleFile[0].uri : ''} </Text> */}
@@ -265,7 +271,7 @@ const SuccessScreen = ({navigation}) => {
         <Text>File Size: {singleFile.size ? singleFile.size : ''}</Text>
 
         <Text>File URI: {singleFile.uri ? singleFile.uri : ''}</Text> */}
-        </View>
+        </MyView>
         <View style={styles.buttons}>
           <Button
             style={{width: '50%'}}
