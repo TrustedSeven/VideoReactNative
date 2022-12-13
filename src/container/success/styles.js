@@ -20,7 +20,6 @@ export default StyleSheet.create({
     },
     filepicker:{
         width:'100%',
-        marginTop: 30
     },
     buttons:{
         marginTop:10,

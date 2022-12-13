@@ -153,14 +153,19 @@ export const AuthProvider = ({children}) => {
             });
           }
         },
-        // register: async (id_user, token) => {
-        //     const userCred = {
-        //       id_user,
-        //       token,
-        //     };
-        //     await register(userCred);
-
-        // },
+        register: async (id_user, token) => {
+          if(id_user!=='' && token !==''){
+            const userCred = {
+              id_user,
+              token,
+            };
+            await register(userCred);
+          }
+          else{
+            console.log('refresh failed');
+          }
+            
+        },
         signup: async (
           email,
           password,

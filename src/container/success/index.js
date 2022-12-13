@@ -26,6 +26,7 @@ const SuccessScreen = ({navigation}) => {
   const [selected, setSelected] = useState('');
   const {config} = useContext(AuthContext);
   const {userProfile} = useContext(AuthContext);
+  const {register} = useContext(AuthContext);
   const [id_celular, setId_celular] = useState(null);
   const [jsonData, setJsonData] = useState([]);
   const [playurl, setPlayurl] = useState('');
@@ -242,6 +243,17 @@ const SuccessScreen = ({navigation}) => {
             data={data1}
             save="value"
           />
+        </View>
+        <View style={styles.buttons}>
+          <Button
+            style={{width: '100%',}}
+            mode="contained"
+            onPress={()=>{
+              // console.log(userProfile);
+              register(userProfile.user_profile.id_user, userProfile.user_profile.token);
+            }}>
+            Refresh
+          </Button>
         </View>
         <View style={styles.filepicker}>
           <Header>Select Video File</Header>
