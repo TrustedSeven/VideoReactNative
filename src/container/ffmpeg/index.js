@@ -3,6 +3,7 @@ import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import VideoPlayer from 'react-native-video-player';
 import RNFetchBlob from 'rn-fetch-blob';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import Background from '../../components/Background';
 import Button from '../../components/Button';
@@ -59,6 +60,11 @@ const VideoPlay = () => {
             uri: route.params.message,
           }}
         />
+        <Spinner
+            visible={loading}
+            textContent={'Uploading...'}
+            textStyle={styles.spinnerTextStyle}
+          />
       </View>
       <Modal
         animationType="slide"
@@ -85,7 +91,7 @@ const VideoPlay = () => {
           console.log('upload file');
           Upload(route.params.message);
         }}>
-        {!loading?"Upload":"Uploading file..."}
+        Upload
       </Button>
     </Background>
   );
@@ -132,6 +138,9 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
   },
 });
 export default VideoPlay;

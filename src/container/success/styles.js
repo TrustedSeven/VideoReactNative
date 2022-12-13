@@ -31,5 +31,8 @@ export default StyleSheet.create({
         width:'100%',
         flexDirection:'row'
     },
+    spinnerTextStyle: {
+        color: '#FFF'
+      },
     
 });

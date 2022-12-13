@@ -15,6 +15,7 @@ import {LogLevel, FFmpegKit, FFmpegKitConfig} from 'ffmpeg-kit-react-native';
 import base64 from 'react-native-base64';
 import RNFetchBlob from 'rn-fetch-blob';
 import VideoPlayer from 'react-native-video-player';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import Button from '../../components/Button';
 import Background from '../../components/Background';
@@ -240,6 +241,7 @@ const SuccessScreen = ({navigation}) => {
     <ScrollView style={styles.background}>
       <Background>
         {/* <BackButton goBack={navigation.goBack} /> */}
+        
         <View style={styles.selectEvent}>
           <Header>Select Events</Header>
           <SelectList
@@ -258,10 +260,13 @@ const SuccessScreen = ({navigation}) => {
             }}>
             Refresh
           </Button>
+          <Spinner
+            visible={downloading}
+            textContent={'Loading...'}
+            textStyle={styles.spinnerTextStyle}
+          />
         </View>
-        <MyView style={styles.filepicker}
-        hide = {downloading}
-        >
+        <View style={styles.filepicker}>
           <Header>Select Video File</Header>
 
           {/* <Text> File Name: {singleFile ? singleFile[0].uri : ''} </Text> */}
@@ -271,7 +276,7 @@ const SuccessScreen = ({navigation}) => {
         <Text>File Size: {singleFile.size ? singleFile.size : ''}</Text>
 
         <Text>File URI: {singleFile.uri ? singleFile.uri : ''}</Text> */}
-        </MyView>
+        </View>
         <View style={styles.buttons}>
           <Button
             style={{width: '50%'}}
@@ -326,8 +331,13 @@ const SuccessScreen = ({navigation}) => {
             style={{width: '100%', marginBottom: 60}}
             mode="contained"
             onPress={Process}>
-            {!loading?"Process":"Processing..."}
+            Process
           </Button>
+          <Spinner
+            visible={loading}
+            textContent={'Loading...'}
+            textStyle={styles.spinnerTextStyle}
+          />
         </View>
       </Background>
     </ScrollView>
