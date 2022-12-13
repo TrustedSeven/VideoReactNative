@@ -2,10 +2,7 @@ import React, {useState, useContext} from 'react';
 import {Alert, StyleSheet, Pressable, View,TouchableOpacity} from 'react-native';
 import Modal from "react-native-modal";
 import {shadow, Text} from 'react-native-paper';
-import Toast from 'react-native-toast-message';
 import DeviceInfo from 'react-native-device-info';
-import base64 from 'react-native-base64'
-
 
 import Background from '../../components/Background';
 import Logo from '../../components/Logo';
@@ -48,11 +45,12 @@ export default function LogInScreen({navigation}) {
     if (email != '' && password != '') {
       // setLoading(true);
       login(email, password, idcelular);
+      
       // Toast.show({
       //   type: 'success',
       //   text1: 'Loading',
       //   text2: 'Por favor espere el servidor......',
-      // });
+      // }); 
     }
     else{
       // Toast.show({
@@ -193,5 +191,5 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center"
-  }
+  },
 });

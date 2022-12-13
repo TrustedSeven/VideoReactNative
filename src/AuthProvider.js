@@ -2,6 +2,8 @@ import React, {createContext, useState, useEffect} from 'react';
 import Toast from 'react-native-toast-message';
 import {Alert, StyleSheet, Text, Pressable, View, Button} from 'react-native';
 import Modal from "react-native-modal";
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 import API from './services/API';
 import {useMutation} from 'react-query';
@@ -50,6 +52,7 @@ export const AuthProvider = ({children}) => {
         // });
         setModalcontent(data.msg);
         setModalVisible(true);
+        setLoading(false);
       }
     },
     onError: data => {
@@ -97,7 +100,7 @@ export const AuthProvider = ({children}) => {
         //   text1: 'Success',
         //   text2: data.msg,
         // });
-        // setLoading(false);
+        setLoading(false);
         setModalcontent(
           'Los datos se registraron correctamente, ya puede iniciar session.',
         );
@@ -109,6 +112,7 @@ export const AuthProvider = ({children}) => {
         //   text2: 'por favor inserte todos los campos correctamente',
         //   // text2: data.error_msg.email+data.error_msg.password+data.error_msg.celular,
         // });
+        setLoading(false);
         if (data.error_msg.email && data.error_msg.celular) {
           setModalcontent(data.error_msg.email + ' ' + data.error_msg.celular);
         } else {
@@ -206,7 +210,13 @@ export const AuthProvider = ({children}) => {
       >
       {children}
       <Toast />
-      
+      <View>
+      <Spinner
+            visible={loading}
+            textContent={'Please wait...'}
+            textStyle={styles.spinnerTextStyle}
+          />
+      </View>
       <Modal isVisible={isModalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -264,5 +274,8 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
   },
 });
