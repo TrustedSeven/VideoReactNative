@@ -1,4 +1,4 @@
-import React, {useState, useContext, useRef} from 'react';
+import React, {useState, useContext, useRef, useEffect} from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -7,7 +7,7 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import Modal from "react-native-modal";
+import Modal from 'react-native-modal';
 import {Text} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import PhoneInput from 'react-native-phone-number-input';
@@ -25,7 +25,7 @@ import {passwordValidator} from '../../helpers/passwordValidator';
 import {AuthContext} from '../../AuthProvider';
 
 export default function LogInScreen({navigation}) {
-  const {signup} = useContext(AuthContext);
+  const {signup, setNav} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmpassword, setconfirmPassword] = useState('');
@@ -36,6 +36,10 @@ export default function LogInScreen({navigation}) {
   const [celular, setCeluar] = useState('');
   const [idcel, setIdcel] = useState('');
   const [status, setStatus] = useState(false);
+
+  useEffect(() => {
+    setNav(navigation);
+  }, []);
 
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -81,9 +85,7 @@ export default function LogInScreen({navigation}) {
         <Modal isVisible={isModalVisible}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>
-              Las contraseñas no coinciden
-              </Text>
+              <Text style={styles.modalText}>Las contraseñas no coinciden</Text>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
                 onPress={toggleModal}>

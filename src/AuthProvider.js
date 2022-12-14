@@ -18,6 +18,7 @@ export const AuthProvider = ({children}) => {
   const [token, setToken] = useState();
   const [modalcontent, setModalcontent] = useState();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [navigation, setNavigation] = useState(null);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -101,6 +102,7 @@ export const AuthProvider = ({children}) => {
           'Los datos se registraron correctamente, ya puede iniciar session.',
         );
         setModalVisible(true);
+        navigation.push("LogIn");
       } else {
         setLoading(false);
         if (data.error_msg.email && data.error_msg.celular) {
@@ -130,6 +132,9 @@ export const AuthProvider = ({children}) => {
       value={{
         userProfile,
         config,
+        setNav: async (nav)=>{
+          setNavigation(nav);
+        }, 
         login: async (email, password, idcelular) => {
           if (email !== '' && password !== '') {
             setLoading(true);
