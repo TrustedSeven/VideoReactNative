@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useState, useRef, useEffect} from 'react';
 import {RNCamera} from 'react-native-camera';
 import {
   Text,
@@ -12,48 +12,62 @@ import { CameraRoll } from '@react-native-camera-roll/camera-roll'
 
 import CameraButton from '../../components/CameraButton';
 
-export default class CameraScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      recording: false,
-      seconds: 0,
-      maxDuration: 1000,
-    };
-  }
+export default function CameraScreen({navigation}) {
 
-  recordVideo = async () => {
-    if (this.camera) {
-      if (!this.state.recording) this.startRecording();
-      else this.stopRecording();
+  const camera = useRef(null);
+  const [recording, setRecording] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+  const [maxDuration, setMaxDuration] = useState(1000);
+  const [recordname, setRecordname] = useState(null);
+
+  useEffect(() => {
+    // navigation.push('Success', {message: recordname});
+    console.log(recordname)
+  }, [recordname]);
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if(recording){
+        setSeconds(seconds => seconds + 1);
+      }
+      else{
+        setSeconds(0);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [recording]);
+
+  const recordVideo = async () => {
+    if (camera) {
+      if (!recording) startRecording();
+      else stopRecording();      
     }
   };
 
-  stopRecording = () => {
-    this.camera.stopRecording();
-    clearInterval(this.countRecordTime);
-    this.setState({seconds: 0});
+  const stopRecording = () => {
+    camera.current.stopRecording();
+    console.log('stop')
+    setSeconds(0);
   };
 
-  startRecording = async () => {
-    this.setState({recording: true});
-    this.countRecordTime = setInterval(
-      () => this.setState({seconds: this.state.seconds + 1}),
-      1000,
-    );
+  const startRecording = async () => {
+    setRecording(true);
     console.log('+++++++++++ Before record');
 
-    const cameraConfig = {maxDuration: this.state.maxDuration};
-    const data = await this.camera.recordAsync(cameraConfig);
+    const cameraConfig = {maxDuration: maxDuration};
+    const data = await camera.current.recordAsync(cameraConfig);
     console.log('+++++++++++ Recorded Result', data);
-    this.setState({recording: false});
+    setRecording(false);
     try {
       CameraRoll.save(data.uri, 'video')
         .then(onfulfilled => {
           console.log('+++++++++++ Saved Successfully!!!', onfulfilled);
           console.log(data.uri);
           var ret = data.uri.replace('file:///data/user/0/com.videoapp/cache/Camera/','');
-          console.log(ret);
+          // console.log(ret);
+          setRecordname(ret);
+          navigation.navigate('Success');
           ToastAndroid.show(
             `VidApp Videos: ${onfulfilled}`,
             ToastAndroid.SHORT,
@@ -70,24 +84,20 @@ export default class CameraScreen extends Component {
 
   };
 
-  render() {
+  
     return (
-      <View>
-        {this.props.header}
+      
         <RNCamera
           type={RNCamera.Constants.Type.back}
-          ref={camera => {
-            this.camera = camera;
-          }}
+          ref={camera}
           captureAudio={true}
           style={{height: '100%'}}>
           <View style={{flexDirection: 'column', alignItems: 'center'}}>
             
-            <Text>{this.state.seconds}</Text>
-            <CameraButton onPress={this.recordVideo}></CameraButton>
+            <Text>{seconds}</Text>
+            <CameraButton onPress={recordVideo}></CameraButton>
           </View>
         </RNCamera>
-      </View>
+      
     );
-  }
 }

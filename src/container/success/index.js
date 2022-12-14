@@ -13,6 +13,8 @@ import base64 from 'react-native-base64';
 import RNFetchBlob from 'rn-fetch-blob';
 import VideoPlayer from 'react-native-video-player';
 import Spinner from 'react-native-loading-spinner-overlay';
+import {useRoute} from '@react-navigation/native';
+
 
 import Button from '../../components/Button';
 import Background from '../../components/Background';
@@ -33,6 +35,7 @@ const SuccessScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [show, setShow] = useState(false);
+  // const route = useRoute(null);
 
   const downloadFile = () => {
     if (jsonData.length === 0) {
@@ -189,7 +192,6 @@ const SuccessScreen = ({navigation}) => {
   const SingleFilePicker = async () => {
     FFmpegKitConfig.selectDocumentForRead('*/*').then(uri => {
       console.log(uri);
-      // uri = "content://com.android.externalstorage.documents/document/primary%3AMovies%2F1.mp4"
       setPlayurl(uri);
       FFmpegKitConfig.getSafParameterForRead(uri).then(safUrl => {
         setSingleFile(safUrl);
@@ -208,11 +210,13 @@ const SuccessScreen = ({navigation}) => {
       let cmd1 = selectedData[0]['cmd']['efecto 1'];
       cmd1 = cmd1.replace('input.mp4', singleFile);
       setLoading(true);
-
+      // console.log(route.params.message);
+      
       FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*').then(
         targeturi => {
           FFmpegKitConfig.getSafParameterForWrite(targeturi).then(safUrl1 => {
             cmd1 = cmd1.replace('out.mp4', safUrl1);
+            console.log(cmd1);
             FFmpegKit.execute(cmd1)
               .then(()=> {
                 setLoading(false);
