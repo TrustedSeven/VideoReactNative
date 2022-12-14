@@ -58,18 +58,8 @@ export default function LogInScreen({navigation}) {
       signup(email, password, id_celular, nombre, apellido, pais, celular);
       console.log(id_celular);
       console.log('password match');
-      // Toast.show({
-      //   type: 'success',
-      //   text1: 'Loading',
-      //   text2: "Por favor espere el servidor......",
-      // });
     } else {
       console.log('password does not match');
-      // Toast.show({
-      //   type: 'error',
-      //   text1: 'Sorry',
-      //   text2: "Las contraseñas no coinciden",
-      // });
       setModalVisible(true);
     }
 
@@ -170,13 +160,6 @@ export default function LogInScreen({navigation}) {
           withDarkTheme
           withShadow
         />
-        {/* <View style={styles.forgotPassword}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ResetPasswordScreen')}
-        >
-          <Text style={styles.forgot}>Forgot your password?</Text>
-        </TouchableOpacity>
-      </View> */}
         <Button mode="contained" onPress={onSignUpPressed}>
           Sign Up
         </Button>
@@ -200,6 +183,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     marginTop: 4,
+    marginBottom: 40,
   },
   forgot: {
     fontSize: 13,

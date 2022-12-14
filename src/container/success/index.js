@@ -1,13 +1,10 @@
 import styles from './styles';
-import React, {Component, useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   View,
   Alert,
-  Text,
-  Input,
   PermissionsAndroid,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native';
 import {SelectList} from 'react-native-dropdown-select-list';
 import NumericInput from 'react-native-numeric-input';
@@ -19,7 +16,6 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import Button from '../../components/Button';
 import Background from '../../components/Background';
-import BackButton from '../../components/BackButton';
 import Header from '../../components/Header';
 import {AuthContext} from '../../AuthProvider';
 import MyView from '../../components/MyView';
@@ -36,7 +32,7 @@ const SuccessScreen = ({navigation}) => {
   const fileUrl = 'https://social360.app/';
   const [loading, setLoading] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  // const targeturi = '';
+  const [show, setShow] = useState(false);
 
   const downloadFile = () => {
     if (jsonData.length === 0) {
@@ -213,7 +209,6 @@ const SuccessScreen = ({navigation}) => {
 
       FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*').then(
         targeturi => {
-          console.log(targeturi+"-------------------");
           FFmpegKitConfig.getSafParameterForWrite(targeturi).then(safUrl1 => {
             cmd1 = cmd1.replace('out.mp4', safUrl1);
             FFmpegKit.executeAsync(cmd1)
@@ -222,7 +217,6 @@ const SuccessScreen = ({navigation}) => {
                 console.log(res);
                 navigation.push('VideoPlay', {message: targeturi});
                 console.log('--------End---------');
-
               });
           });
         },
@@ -239,15 +233,20 @@ const SuccessScreen = ({navigation}) => {
 
   return (
     <ScrollView style={styles.background}>
-      <Background>
-        {/* <BackButton goBack={navigation.goBack} /> */}
-        
+      <Background>        
         <View style={styles.selectEvent}>
           <Header>Select Events</Header>
           <SelectList
-            setSelected={val => setSelected(val)}
+            setSelected={val => {setSelected(val)
+            setShow(true)
+            }}
             data={data1}
             save="value"
+          />
+          <Spinner
+            visible={loading}
+            textContent={'Loading...'}
+            textStyle={styles.spinnerTextStyle}
           />
         </View>
         <View style={styles.buttons}>
@@ -266,18 +265,10 @@ const SuccessScreen = ({navigation}) => {
             textStyle={styles.spinnerTextStyle}
           />
         </View>
-        <View style={styles.filepicker}>
+        {show&&<View style={styles.filepicker}>
           <Header>Select Video File</Header>
-
-          {/* <Text> File Name: {singleFile ? singleFile[0].uri : ''} </Text> */}
-
-          {/* <Text>file Type: {singleFile.type ? singleFile.type : ''}</Text>
-
-        <Text>File Size: {singleFile.size ? singleFile.size : ''}</Text>
-
-        <Text>File URI: {singleFile.uri ? singleFile.uri : ''}</Text> */}
-        </View>
-        <View style={styles.buttons}>
+        </View>}
+        {show&&<View style={styles.buttons}>
           <Button
             style={{width: '50%'}}
             mode="contained"
@@ -292,24 +283,24 @@ const SuccessScreen = ({navigation}) => {
             }}>
             Take Video
           </Button>
-        </View>
-        <View style={{width: '100%'}}>
+        </View>}
+        {show&&<View style={{width: '100%'}}>
           <VideoPlayer
             style={{width: '100%'}}
             video={{
               uri: playurl,
             }}
           />
-        </View>
-        <View style={styles.secondpicker}>
+        </View>}
+        {show&&<View style={styles.secondpicker}>
           <Header>Seconds to Start      </Header>
           <NumericInput
             onChange={value => {
               setStartsec(value);
             }}
           />
-        </View>
-        <View style={styles.secondpicker}>
+        </View>}
+        {show&&<View style={styles.secondpicker}>
           <Header>Recording Time        </Header>
           <NumericInput
             style={{marginLeft: 10}}
@@ -317,28 +308,23 @@ const SuccessScreen = ({navigation}) => {
               setRecsec(value);
             }}
           />
-        </View>
-        <View style={styles.selectEvent}>
+        </View>}
+        {show&&<View style={styles.selectEvent}>
           <Header>Select Audio</Header>
           <SelectList
             setSelected={val => setSelected(val)}
             data={data2}
             save="value"
           />
-        </View>
-        <View style={styles.buttons}>
+        </View>}
+        {show&&<View style={styles.buttons}>
           <Button
             style={{width: '100%', marginBottom: 60}}
             mode="contained"
             onPress={Process}>
             Process
           </Button>
-          <Spinner
-            visible={loading}
-            textContent={'Loading...'}
-            textStyle={styles.spinnerTextStyle}
-          />
-        </View>
+        </View>}
       </Background>
     </ScrollView>
   );

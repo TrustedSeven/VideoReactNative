@@ -7,6 +7,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import API from './services/API';
 import {useMutation} from 'react-query';
+import { NavigationContainerRefContext } from '@react-navigation/native';
 export const AuthContext = createContext({});
 
 export const AuthProvider = ({children}) => {
@@ -95,23 +96,12 @@ export const AuthProvider = ({children}) => {
   const {mutate: signup} = useMutation(API.signup, {
     onSuccess: data => {
       if (data.error == false) {
-        // Toast.show({
-        //   type: 'success',
-        //   text1: 'Success',
-        //   text2: data.msg,
-        // });
         setLoading(false);
         setModalcontent(
           'Los datos se registraron correctamente, ya puede iniciar session.',
         );
         setModalVisible(true);
       } else {
-        // Toast.show({
-        //   type: 'error',
-        //   text1: 'Sorry',
-        //   text2: 'por favor inserte todos los campos correctamente',
-        //   // text2: data.error_msg.email+data.error_msg.password+data.error_msg.celular,
-        // });
         setLoading(false);
         if (data.error_msg.email && data.error_msg.celular) {
           setModalcontent(data.error_msg.email + ' ' + data.error_msg.celular);
