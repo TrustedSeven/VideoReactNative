@@ -188,6 +188,8 @@ const SuccessScreen = ({navigation}) => {
 
   const SingleFilePicker = async () => {
     FFmpegKitConfig.selectDocumentForRead('*/*').then(uri => {
+      console.log(uri);
+      // uri = "content://com.android.externalstorage.documents/document/primary%3AMovies%2F1.mp4"
       setPlayurl(uri);
       FFmpegKitConfig.getSafParameterForRead(uri).then(safUrl => {
         setSingleFile(safUrl);

@@ -52,6 +52,8 @@ export default class CameraScreen extends Component {
         .then(onfulfilled => {
           console.log('+++++++++++ Saved Successfully!!!', onfulfilled);
           console.log(data.uri);
+          var ret = data.uri.replace('file:///data/user/0/com.videoapp/cache/Camera/','');
+          console.log(ret);
           ToastAndroid.show(
             `VidApp Videos: ${onfulfilled}`,
             ToastAndroid.SHORT,
