@@ -34,5 +34,9 @@ export default StyleSheet.create({
     spinnerTextStyle: {
         color: '#FFF'
       },
+    hidepart : {
+        minHeight : 400,
+        marginTop : 100
+    }
     
 });

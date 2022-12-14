@@ -211,12 +211,12 @@ const SuccessScreen = ({navigation}) => {
         targeturi => {
           FFmpegKitConfig.getSafParameterForWrite(targeturi).then(safUrl1 => {
             cmd1 = cmd1.replace('out.mp4', safUrl1);
-            FFmpegKit.executeAsync(cmd1)
-              .then(res => {
-                setLoading(false)
-                console.log(res);
+            FFmpegKit.execute(cmd1)
+              .then(()=> {
+                setLoading(false);
+                // console.log(res);
                 navigation.push('VideoPlay', {message: targeturi});
-                console.log('--------End---------');
+                console.log('----------------------------')
               });
           });
         },
@@ -324,6 +324,11 @@ const SuccessScreen = ({navigation}) => {
             onPress={Process}>
             Process
           </Button>
+        </View>}
+        {!show&&<View style = {styles.hidepart}>
+          <Header>
+            Please Select the Events!
+          </Header>
         </View>}
       </Background>
     </ScrollView>
