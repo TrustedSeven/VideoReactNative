@@ -67,9 +67,9 @@ export default function CameraScreen({navigation}) {
           var ret = data.uri.replace('file:///data/user/0/com.videoapp/cache/Camera/','');
           // console.log(ret);
           setRecordname(ret);
-          navigation.navigate('Success');
+          navigation.navigate('Success', {message: ret});
           ToastAndroid.show(
-            `VidApp Videos: ${onfulfilled}`,
+            `File Name : ${ret}`,
             ToastAndroid.SHORT,
           );
         })

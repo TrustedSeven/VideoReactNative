@@ -35,7 +35,13 @@ const SuccessScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [show, setShow] = useState(false);
-  // const route = useRoute(null);
+  const route = useRoute();
+
+  useEffect(() => {
+    if(route.params!==undefined){
+      SingleFilePicker();
+    }
+  }, [route]);
 
   const downloadFile = () => {
     if (jsonData.length === 0) {
@@ -198,6 +204,7 @@ const SuccessScreen = ({navigation}) => {
         console.log(singleFile);
       });
     });
+    
   };
   const Process = async () => {
     console.log('----------------Before Start------------------');
@@ -227,13 +234,6 @@ const SuccessScreen = ({navigation}) => {
           });
         },
       );
-
-      // const targeturi = await FFmpegKitConfig.selectDocumentForWrite('video.mp4', 'video/*');
-      // const safUrl1 = await FFmpegKitConfig.getSafParameterForWrite(targeturi);
-      // cmd1 = cmd1.replace('out.mp4', safUrl1);
-      // const res = await FFmpegKit.executeAsync(cmd1);
-      // console.log("success");
-      // navigation.push('VideoPlay', {message: targeturi});
     }
   };
 
