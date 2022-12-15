@@ -8,46 +8,66 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import Background from '../../components/Background';
 import Button from '../../components/Button';
 
-const VideoPlay = () => {
+const VideoPlay = (image_URL) => {
   const route = useRoute();
   console.log(route.params.message);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const DownloadQR = (image_URL) => {
+    const {config, fs} = RNFetchBlob;
+    let PictureDir = fs.dirs.PictureDir;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        //Related to the Android only
+        useDownloadManager: true,
+        notification: true,
+        path:
+          PictureDir +
+          '/QRimage_' +
+          '.png',
+        description: 'Image',
+      },
+    };
+    config(options)
+      .fetch('GET', image_URL)
+      .then(res => {
+        //Showing alert after successful downloading
+        console.log('res -> ', JSON.stringify(res));
+        alert('Image Downloaded Successfully.');
+      });
+  };
+
   const Upload = url => {
     var data = new FormData();
     // data.append('file_upload', url);
     setLoading(true);
-
     data.append('file_upload', {
       name: 'name',
       uri: url,
       type: 'video/mp4',
     });
-
-    fetch(
-      'https://social360.app/edit/api/subirVideo',
-      {
-        method: 'POST',
-        body: data,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        // header: {'Content-Type': 'application/octet-stream'},
-        // Change BASE64 encoded data to a file path with prefix `RNFetchBlob-file://`.
-        // Or simply wrap the file path with RNFetchBlob.wrap().
-      },
-      // RNFetchBlob.wrap(url),
-    )
-      .then(res => {
-        console.log(res);
+    fetch('https://social360.app/edit/api/subirVideo', {
+      method: 'POST',
+      body: data,
+      header: {'Content-Type': 'multipart/form-data'},
+    })
+      .then((response) => response.json())
+      //If response is in json then in success
+      .then((response) => {
+        //Success
+        console.log(response);
+        DownloadQR(response.qr);
         setModalVisible(true);
         setLoading(false);
       })
-      .catch(err => {
-        // error handling ..
+      //If response is not in json then in error
+      .catch((error) => {
+        //Error
+        console.error(error);
+        // setModalVisible(true);
         setLoading(false);
-        console.error(err);
       });
   };
 
@@ -61,10 +81,10 @@ const VideoPlay = () => {
           }}
         />
         <Spinner
-            visible={loading}
-            textContent={'Uploading...'}
-            textStyle={styles.spinnerTextStyle}
-          />
+          visible={loading}
+          textContent={'Uploading...'}
+          textStyle={styles.spinnerTextStyle}
+        />
       </View>
       <Modal
         animationType="slide"
@@ -140,7 +160,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   spinnerTextStyle: {
-    color: '#FFF'
+    color: '#FFF',
   },
 });
 export default VideoPlay;
