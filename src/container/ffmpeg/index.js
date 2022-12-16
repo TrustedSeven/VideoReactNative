@@ -1,5 +1,13 @@
 import React, {Component, useEffect, useState} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
+import {
+  Alert,
+  StyleSheet,
+  Text,
+  Pressable,
+  View,
+  Image,
+} from 'react-native';
+import Modal from "react-native-modal";
 import {useRoute} from '@react-navigation/native';
 import VideoPlayer from 'react-native-video-player';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -8,13 +16,27 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import Background from '../../components/Background';
 import Button from '../../components/Button';
 
-const VideoPlay = (image_URL) => {
+const VideoPlay = () => {
   const route = useRoute();
   console.log(route.params.message);
-  const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [urlQr, setUrlQr] = useState(null);
 
-  const DownloadQR = (image_URL) => {
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  useEffect(() => {
+    if (urlQr !== null) {
+      console.log("====urlQR===="+urlQr);
+      setLoading(false);
+      setModalVisible(true);
+    }
+  }, [urlQr]);
+
+  const DownloadQR = image_URL => {
     const {config, fs} = RNFetchBlob;
     let PictureDir = fs.dirs.PictureDir;
     let options = {
@@ -23,10 +45,7 @@ const VideoPlay = (image_URL) => {
         //Related to the Android only
         useDownloadManager: true,
         notification: true,
-        path:
-          PictureDir +
-          '/QRimage_' +
-          '.png',
+        path: PictureDir + '/QRimage_' + '.png',
         description: 'Image',
       },
     };
@@ -53,17 +72,16 @@ const VideoPlay = (image_URL) => {
       body: data,
       header: {'Content-Type': 'multipart/form-data'},
     })
-      .then((response) => response.json())
+      .then(response => response.json())
       //If response is in json then in success
-      .then((response) => {
+      .then(response => {
         //Success
         console.log(response);
-        DownloadQR(response.qr);
-        setModalVisible(true);
-        setLoading(false);
+        // DownloadQR(response.qr);
+        setUrlQr(response.qr);
       })
       //If response is not in json then in error
-      .catch((error) => {
+      .catch(error => {
         //Error
         console.error(error);
         // setModalVisible(true);
@@ -86,7 +104,7 @@ const VideoPlay = (image_URL) => {
           textStyle={styles.spinnerTextStyle}
         />
       </View>
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -97,9 +115,23 @@ const VideoPlay = (image_URL) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Upload Success</Text>
+            <Image source={{uri:urlQr}} style={{height: 150, width: 150}} />
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>OK</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal> */}
+      <Modal isVisible={isModalVisible}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Upload Success</Text>
+            <Image source={{uri:urlQr}} style={{height: 150, width: 150}} />
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={toggleModal}>
               <Text style={styles.textStyle}>OK</Text>
             </Pressable>
           </View>
