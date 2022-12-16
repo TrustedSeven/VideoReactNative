@@ -17,6 +17,8 @@ import {AuthContext} from '../../AuthProvider';
 
 export default function LogInScreen({navigation}) {
   const {login} = useContext(AuthContext);
+  const {start} = useContext(AuthContext);
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [idcelular, setIdcelular] = useState('xxxxxx');
@@ -41,26 +43,12 @@ export default function LogInScreen({navigation}) {
   const onLoginPressed = () => {
     const emailError = emailValidator(email);
     const passwordError = passwordValidator(password);
-    // console.log(idcelular);
     if (email != '' && password != '') {
-      // setLoading(true);
       login(email, password, idcelular);
-      
-      // Toast.show({
-      //   type: 'success',
-      //   text1: 'Loading',
-      //   text2: 'Por favor espere el servidor......',
-      // }); 
     }
     else{
-      // Toast.show({
-      //   type: 'error',
-      //   text1: 'Sorry',
-      //   text2: 'Por favor inserte correo electrónico y contraseña',
-      // });
       setModalVisible(true)
     }
-
     // if (emailError || passwordError) {
     //   setEmail({ ...email, error: emailError })
     //   setPassword({ ...password, error: passwordError })
@@ -72,6 +60,10 @@ export default function LogInScreen({navigation}) {
     // })
     //navigation.navigate('Success');
   };
+
+  const onStartPressed = () =>{
+    start();
+  }
 
   return (
     <Background state={status}>
@@ -114,14 +106,17 @@ export default function LogInScreen({navigation}) {
         errorText={password.error}
         secureTextEntry
       />
-      <View style={styles.forgotPassword}>
+      {/* <View style={styles.forgotPassword}>
         <TouchableOpacity
           onPress={() => navigation.navigate('ResetPasswordScreen')}>
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <Button mode="contained" onPress={onLoginPressed}>
-        {!loading?"Log In":"Loading..."}
+        login
+      </Button>
+      <Button mode="contained" onPress={onStartPressed}>
+        Start without Login
       </Button>
       <View style={styles.row}>
         <Text>Don’t have an account? </Text>

@@ -1,13 +1,12 @@
 import React, {createContext, useState, useEffect} from 'react';
 import Toast from 'react-native-toast-message';
 import {Alert, StyleSheet, Text, Pressable, View, Button} from 'react-native';
-import Modal from "react-native-modal";
+import Modal from 'react-native-modal';
 import Spinner from 'react-native-loading-spinner-overlay';
-
 
 import API from './services/API';
 import {useMutation} from 'react-query';
-import { NavigationContainerRefContext } from '@react-navigation/native';
+import {NavigationContainerRefContext} from '@react-navigation/native';
 export const AuthContext = createContext({});
 
 export const AuthProvider = ({children}) => {
@@ -37,21 +36,11 @@ export const AuthProvider = ({children}) => {
   const {mutate: login} = useMutation(API.login, {
     onSuccess: data => {
       if (data.error == false) {
-        // Toast.show({
-        //   type: 'success',
-        //   text1: 'Welcome',
-        //   text2: 'Successfully login' + '👋',
-        // });
         setUserProfile(data);
         setId_user(data.user_profile.id_user);
         setToken(data.user_profile.token);
         setLoading(false);
       } else {
-        // Toast.show({
-        //   type: 'error',
-        //   text1: 'Sorry--------',
-        //   text2: data.msg,
-        // });
         setModalcontent(data.msg);
         setModalVisible(true);
         setLoading(false);
@@ -102,7 +91,7 @@ export const AuthProvider = ({children}) => {
           'Los datos se registraron correctamente, ya puede iniciar session.',
         );
         setModalVisible(true);
-        navigation.push("LogIn");
+        navigation.push('LogIn');
       } else {
         setLoading(false);
         if (data.error_msg.email && data.error_msg.celular) {
@@ -132,9 +121,9 @@ export const AuthProvider = ({children}) => {
       value={{
         userProfile,
         config,
-        setNav: async (nav)=>{
+        setNav: async nav => {
           setNavigation(nav);
-        }, 
+        },
         login: async (email, password, idcelular) => {
           if (email !== '' && password !== '') {
             setLoading(true);
@@ -152,18 +141,31 @@ export const AuthProvider = ({children}) => {
             });
           }
         },
+        start: () => {
+          console.log('-----aaaaa');
+          setUserProfile({
+            error: false,
+            user_profile: {
+              apellido: '',
+              email: '',
+              id_celular: '',
+              id_user: '',
+              nombre: '',
+              pais: '',
+              token: '',
+            },
+          });          
+        },
         register: async (id_user, token) => {
-          if(id_user!=='' && token !==''){
+          if (id_user !== '' && token !== '') {
             const userCred = {
               id_user,
               token,
             };
             await register(userCred);
-          }
-          else{
+          } else {
             console.log('refresh failed');
           }
-            
         },
         signup: async (
           email,
@@ -201,16 +203,15 @@ export const AuthProvider = ({children}) => {
             console.error(e);
           }
         },
-      }}
-      >
+      }}>
       {children}
       <Toast />
       <View>
-      <Spinner
-            visible={loading}
-            textContent={'Please wait...'}
-            textStyle={styles.spinnerTextStyle}
-          />
+        <Spinner
+          visible={loading}
+          textContent={'Please wait...'}
+          textStyle={styles.spinnerTextStyle}
+        />
       </View>
       <Modal isVisible={isModalVisible}>
         <View style={styles.centeredView}>
@@ -223,7 +224,6 @@ export const AuthProvider = ({children}) => {
             </Pressable>
           </View>
         </View>
-        
       </Modal>
     </AuthContext.Provider>
   );
@@ -271,6 +271,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   spinnerTextStyle: {
-    color: '#FFF'
+    color: '#FFF',
   },
 });
