@@ -36,27 +36,27 @@ const VideoPlay = () => {
     }
   }, [urlQr]);
 
-  const DownloadQR = image_URL => {
-    const {config, fs} = RNFetchBlob;
-    let PictureDir = fs.dirs.PictureDir;
-    let options = {
-      fileCache: true,
-      addAndroidDownloads: {
-        //Related to the Android only
-        useDownloadManager: true,
-        notification: true,
-        path: PictureDir + '/QRimage_' + '.png',
-        description: 'Image',
-      },
-    };
-    config(options)
-      .fetch('GET', image_URL)
-      .then(res => {
-        //Showing alert after successful downloading
-        console.log('res -> ', JSON.stringify(res));
-        alert('Image Downloaded Successfully.');
-      });
-  };
+  // const DownloadQR = image_URL => {
+  //   const {config, fs} = RNFetchBlob;
+  //   let PictureDir = fs.dirs.PictureDir;
+  //   let options = {
+  //     fileCache: true,
+  //     addAndroidDownloads: {
+  //       //Related to the Android only
+  //       useDownloadManager: true,
+  //       notification: true,
+  //       path: PictureDir + '/QRimage_' + '.png',
+  //       description: 'Image',
+  //     },
+  //   };
+  //   config(options)
+  //     .fetch('GET', image_URL)
+  //     .then(res => {
+  //       //Showing alert after successful downloading
+  //       console.log('res -> ', JSON.stringify(res));
+  //       alert('Image Downloaded Successfully.');
+  //     });
+  // };
 
   const Upload = url => {
     var data = new FormData();
