@@ -21,7 +21,6 @@ export default function CameraScreen({navigation}) {
   const [recordname, setRecordname] = useState(null);
 
   useEffect(() => {
-    // navigation.push('Success', {message: recordname});
     console.log(recordname)
   }, [recordname]);
 

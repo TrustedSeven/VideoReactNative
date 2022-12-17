@@ -104,26 +104,6 @@ const VideoPlay = () => {
           textStyle={styles.spinnerTextStyle}
         />
       </View>
-      {/* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Upload Success</Text>
-            <Image source={{uri:urlQr}} style={{height: 150, width: 150}} />
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>OK</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal> */}
       <Modal isVisible={isModalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
