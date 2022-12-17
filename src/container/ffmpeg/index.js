@@ -137,14 +137,14 @@ const VideoPlay = () => {
           </View>
         </View>
       </Modal>
-      <Button
+      {!route.params.local&&<Button
         mode="contained"
         onPress={() => {
           console.log('upload file');
           Upload(route.params.message);
         }}>
         Upload
-      </Button>
+      </Button>}
     </Background>
   );
 };

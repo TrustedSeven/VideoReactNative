@@ -21,6 +21,7 @@ const SuccessScreen = ({navigation}) => {
   const {userProfile} = useContext(AuthContext);
   const {register} = useContext(AuthContext);
   const [id_celular, setId_celular] = useState(null);
+  const [local, setLocal] = useState(false);
   const [jsonData, setJsonData] = useState([
     {
       archivos: [],
@@ -191,9 +192,11 @@ const SuccessScreen = ({navigation}) => {
   useEffect(() => {
     if (config !== null) {
       Load();
+      setLocal(false);
       setDownloading(false);
     } else {
       Load2();
+      setLocal(true);
       setDownloading(false);
     }
   }, [config]);
@@ -344,7 +347,7 @@ const SuccessScreen = ({navigation}) => {
 
     console.log(cmd1);
 
-    setLoading(true);
+    // setLoading(true);
     // console.log(route.params.message);
 
     let fecha = new Date();
@@ -367,7 +370,7 @@ const SuccessScreen = ({navigation}) => {
           FFmpegKit.execute(cmd1).then(() => {
             setLoading(false);
             // console.log(res);
-            navigation.push('VideoPlay', {message: targeturi});
+            navigation.push('VideoPlay', {message: targeturi, local:local});
             console.log('----------------------------');
           });
         });
