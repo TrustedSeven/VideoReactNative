@@ -36,7 +36,7 @@ const SuccessScreen = ({navigation}) => {
       grabar_evento: 6,
       id_evento: '638069139f950',
       iniciar_evento: 2,
-      nombre_evento: 'test',
+      nombre_evento: 'demo1',
     },
     {
       archivos: [],
@@ -51,7 +51,7 @@ const SuccessScreen = ({navigation}) => {
       grabar_evento: 7,
       id_evento: '638078aa33faa',
       iniciar_evento: 1,
-      nombre_evento: 'Test editado',
+      nombre_evento: 'demo2',
     },
     {
       archivos: [],
@@ -66,7 +66,7 @@ const SuccessScreen = ({navigation}) => {
       grabar_evento: 6,
       id_evento: '638a78ac57e35',
       iniciar_evento: 3,
-      nombre_evento: 'test1',
+      nombre_evento: 'demo3',
     },
   ]);
   const [playurl, setPlayurl] = useState('');
@@ -366,6 +366,7 @@ const SuccessScreen = ({navigation}) => {
       targeturi => {
         FFmpegKitConfig.getSafParameterForWrite(targeturi).then(safUrl1 => {
           cmd1 = cmd1.replace('[SALIDA]', safUrl1);
+          setLoading(true);
           console.log(cmd1);
           FFmpegKit.execute(cmd1).then(() => {
             setLoading(false);
