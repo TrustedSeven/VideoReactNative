@@ -23,6 +23,7 @@ export default function LogInScreen({navigation}) {
   const [password, setPassword] = useState('');
   const [idcelular, setIdcelular] = useState('xxxxxx');
   const [idcel, setIdcel] = useState('');
+  const [session, setSession] = useState(false);
   
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(false);
@@ -81,8 +82,9 @@ export default function LogInScreen({navigation}) {
         </View>
       </Modal>
       <Logo />
-      <Header>Welcome back.</Header>
-      <TextInput
+      {!session&&<Header>Welcome back.</Header>}
+      {session&&<Header>Welcome {email}</Header>}
+      {!session&&<TextInput
         label="Email"
         returnKeyType="next"
         value={email}
@@ -96,8 +98,8 @@ export default function LogInScreen({navigation}) {
         autoCompleteType="email"
         textContentType="emailAddress"
         keyboardType="email-address"
-      />
-      <TextInput
+      />}
+      {!session&&<TextInput
         label="Password"
         returnKeyType="done"
         value={password}
@@ -105,19 +107,25 @@ export default function LogInScreen({navigation}) {
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
-      />
+      />}
       {/* <View style={styles.forgotPassword}>
         <TouchableOpacity
           onPress={() => navigation.navigate('ResetPasswordScreen')}>
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
       </View> */}
-      <Button mode="contained" onPress={onLoginPressed}>
+      {!session&&<Button mode="contained" onPress={()=>setSession(true)}>
         login
-      </Button>
-      <Button mode="contained" onPress={onStartPressed}>
-        Start without Login
-      </Button>
+      </Button>}
+      {session&&<Button mode="contained" onPress={onLoginPressed}>
+        Start Session
+      </Button>}
+      {session&&<Button mode="contained" onPress={onStartPressed}>
+        Start Seesion-Internet OFF
+      </Button>}
+      {session&&<Button mode="contained" onPress={()=>setSession(false)}>
+        log out
+      </Button>}
       <View style={styles.row}>
         <Text>Don’t have an account? </Text>
         <TouchableOpacity onPress={() => navigation.push('SignUp')}>
