@@ -1,8 +1,9 @@
-import React, {useState, useContext} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {Alert, StyleSheet, Pressable, View,TouchableOpacity} from 'react-native';
 import Modal from "react-native-modal";
 import {shadow, Text} from 'react-native-paper';
 import DeviceInfo from 'react-native-device-info';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Background from '../../components/Background';
 import Logo from '../../components/Logo';
@@ -17,12 +18,16 @@ import {AuthContext} from '../../AuthProvider';
 
 export default function LogInScreen({navigation}) {
   const {login} = useContext(AuthContext);
+  const {loginToken} = useContext(AuthContext);
   const {start} = useContext(AuthContext);
+
+  const {token} = useContext(AuthContext);
   
   const [email, setEmail] = useState('');
+  const [nombre, setNombre] = useState('');
   const [password, setPassword] = useState('');
-  const [idcelular, setIdcelular] = useState('xxxxxx');
-  const [idcel, setIdcel] = useState('');
+  //const [idcelular, setIdcelular] = useState('xxxxxx');
+  //const [idcel, setIdcel] = useState('');
   const [session, setSession] = useState(false);
   
   const [loading, setLoading] = useState(false);
@@ -34,36 +39,81 @@ export default function LogInScreen({navigation}) {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  
 
-  const getdeviceId = () => {
+  /*const getdeviceId = () => {
     var uniqueId = DeviceInfo.getUniqueId();
     setIdcel(uniqueId);
     setIdcelular(idcel._z);
-  };
-  const onLoginPressed = () => {
+  };*/
+  
+  const onLoginPressed = async () => {
     const emailError = emailValidator(email);
     const passwordError = passwordValidator(password);
     if (email != '' && password != '') {
+      let idcelular = await AsyncStorage.getItem('id_celular');
       login(email, password, idcelular);
-    }
-    else{
+    }else{
       setModalVisible(true)
     }
-    // if (emailError || passwordError) {
-    //   setEmail({ ...email, error: emailError })
-    //   setPassword({ ...password, error: passwordError })
-    //   return
-    // }
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: 'Dashboard' }],
-    // })
-    //navigation.navigate('Success');
+  };
+  
+  const onLoginTokenPressed = async () => {
+    try{
+      let var_id_user = await AsyncStorage.getItem('id_user');
+      let var_id_celular = await AsyncStorage.getItem('id_celular');
+      let var_token = await AsyncStorage.getItem('token');
+      console.log(var_id_user);
+      console.log(var_id_celular);
+      console.log(var_token);
+      loginToken(var_id_user, var_token, var_id_celular);
+    }catch (err) {
+      console.log(err);
+    }
+  };
+
+  const borrarVariables = () => {
+    try{
+      AsyncStorage.multiRemove(['id_user', 'finToken', 'token', 'nombre', 'evento']);
+      setSession(false);
+    }catch (err) {
+      console.log(err);
+    }
   };
 
   const onStartPressed = () =>{
     start();
+  }
+
+  useEffect(() => {
+    leer();
+  }, []);
+
+  const leer = async () => {
+    try{
+      let uniqueId = await DeviceInfo.getUniqueId();
+      AsyncStorage.setItem('id_celular', uniqueId);
+      //console.log(uniqueId);
+      let var_finToken = await AsyncStorage.getItem('finToken');
+      if(var_finToken !== null){
+        console.log('variable guardada: ' + var_finToken);
+        let fecha_token = new Date(var_finToken);
+        let fecha_ahora = new Date();
+        if(fecha_ahora.getTime() < fecha_token.getTime()){
+          console.log('La token aun no caduca');
+          let nombreSession = await AsyncStorage.getItem('nombre');
+          setNombre(nombreSession);
+          setSession(true);
+        }else{
+          console.log('Token caducada');
+          setSession(false);
+        }
+      }else{
+        console.log('No se encontró nada');
+        setSession(false);
+      }
+    }catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -82,15 +132,15 @@ export default function LogInScreen({navigation}) {
         </View>
       </Modal>
       <Logo />
-      {!session&&<Header>Welcome back.</Header>}
-      {session&&<Header>Welcome {email}</Header>}
+      {!session&&<Header>Social360</Header>}
+      {session&&<Header>Bienvenido(a) {nombre}</Header>}
       {!session&&<TextInput
         label="Email"
         returnKeyType="next"
         value={email}
         onChangeText={text => {
           setEmail(text);
-          getdeviceId();
+          //getdeviceId();
         }}
         error={!!email.error}
         errorText={email.error}
@@ -114,24 +164,27 @@ export default function LogInScreen({navigation}) {
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
       </View> */}
-      {!session&&<Button mode="contained" onPress={()=>setSession(true)}>
+      {/*!session&&<Button mode="contained" onPress={()=>setSession(true)}>
         login
+      </Button>*/}
+      {!session&&<Button mode="contained" onPress={onLoginPressed}>
+        Iniciar Session
       </Button>}
-      {session&&<Button mode="contained" onPress={onLoginPressed}>
-        Start Session
+      {session&&<Button mode="contained" onPress={onLoginTokenPressed}>
+        Continuar Session
       </Button>}
       {session&&<Button mode="contained" onPress={onStartPressed}>
-        Start Seesion-Internet OFF
+        Continuar sin Internet
       </Button>}
-      {session&&<Button mode="contained" onPress={()=>setSession(false)}>
-        log out
+      {session&&<Button mode="contained" onPress={borrarVariables}>
+        Cerrar Session
       </Button>}
-      <View style={styles.row}>
-        <Text>Don’t have an account? </Text>
+      {!session&&<View style={styles.row}>
+        <Text>¿No tienes una cuenta? </Text>
         <TouchableOpacity onPress={() => navigation.push('SignUp')}>
-          <Text style={styles.link}>Sign up</Text>
+          <Text style={styles.link}>Registrate</Text>
         </TouchableOpacity>
-      </View>
+      </View>}
     </Background>
   );
 }

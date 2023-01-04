@@ -16,7 +16,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import Background from '../../components/Background';
 import Button from '../../components/Button';
 
-const VideoPlay = () => {
+const VideoPlay = ({navigation}) => {
   const route = useRoute();
   console.log(route.params.message);
   const [loading, setLoading] = useState(false);
@@ -84,6 +84,7 @@ const VideoPlay = () => {
       .catch(error => {
         //Error
         console.error(error);
+        // Alert("Failed Try again1");
         // setModalVisible(true);
         setLoading(false);
       });
@@ -107,7 +108,7 @@ const VideoPlay = () => {
       <Modal isVisible={isModalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Upload Success</Text>
+            <Text style={styles.modalText}>El video se subio correctamente</Text>
             <Image source={{uri:urlQr}} style={{height: 150, width: 150}} />
             <Pressable
               style={[styles.button, styles.buttonClose]}
@@ -123,8 +124,14 @@ const VideoPlay = () => {
           console.log('upload file');
           Upload(route.params.message);
         }}>
-        Upload
+        Subir Video
       </Button>}
+      <Button
+      mode="contained"
+      onPress = {()=>navigation.navigate('Success')}
+      >
+        regresar
+      </Button>
     </Background>
   );
 };

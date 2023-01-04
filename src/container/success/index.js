@@ -9,6 +9,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import VideoPlayer from 'react-native-video-player';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {useRoute} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Button from '../../components/Button';
 import Background from '../../components/Background';
@@ -22,58 +23,13 @@ const SuccessScreen = ({navigation}) => {
   const {register} = useContext(AuthContext);
   const [id_celular, setId_celular] = useState(null);
   const [local, setLocal] = useState(false);
-  const [jsonData, setJsonData] = useState([
-    {
-      archivos: [],
-      cmd: {
-        'efecto 1':
-          'C001|-ss [TINICIO] -t [TFIN] -an -i [ARCHIVO][OTROSARCHIVOS] -y -filter_complex "[0:v]trim=0:2,setpts=PTS-STARTPTS[v1]; [0:v]trim=2:3,setpts=PTS-STARTPTS[v2]; [0:v]trim=start=3,setpts=PTS-STARTPTS[v3]; [v2]setpts=PTS/0.5[slowv]; [v1][slowv][v3]concat=n=3:v=1:a=0[out];[out]split[b][c];[c]reverse[r];[b][r]concat[FILTROEXTRA]"[AUDIO] [SALIDA]',
-        'efecto 2':
-          '-ss 0 -t 5 -an -i input.mp4 -y -filter_complex "[0]split[b][c];[c]reverse[r];[b][r]concat" out.mp4',
-      },
-      descripcion_evento: 'test',
-      fecha_evento: '2022-11-25 02:52:13',
-      grabar_evento: 6,
-      id_evento: '638069139f950',
-      iniciar_evento: 2,
-      nombre_evento: 'demo1',
-    },
-    {
-      archivos: [],
-      cmd: {
-        'efecto 1':
-          'C001|-ss [TINICIO] -t [TFIN] -an -i [ARCHIVO][OTROSARCHIVOS] -y -filter_complex "[0:v]trim=0:2,setpts=PTS-STARTPTS[v1]; [0:v]trim=2:3,setpts=PTS-STARTPTS[v2]; [0:v]trim=start=3,setpts=PTS-STARTPTS[v3]; [v2]setpts=PTS/0.5[slowv]; [v1][slowv][v3]concat=n=3:v=1:a=0[out];[out]split[b][c];[c]reverse[r];[b][r]concat[FILTROEXTRA]"[AUDIO] [SALIDA]',
-        'efecto 2':
-          '-ss 0 -t 5 -an -i input.mp4 -y -filter_complex "[0]split[b][c];[c]reverse[r];[b][r]concat" out.mp4',
-      },
-      descripcion_evento: 'descripción de test editada',
-      fecha_evento: '2022-11-25 03:11:22',
-      grabar_evento: 7,
-      id_evento: '638078aa33faa',
-      iniciar_evento: 1,
-      nombre_evento: 'demo2',
-    },
-    {
-      archivos: [],
-      cmd: {
-        'efecto 1':
-          'C001|-ss [TINICIO] -t [TFIN] -an -i [ARCHIVO][OTROSARCHIVOS] -y -filter_complex "[0:v]trim=0:2,setpts=PTS-STARTPTS[v1]; [0:v]trim=2:3,setpts=PTS-STARTPTS[v2]; [0:v]trim=start=3,setpts=PTS-STARTPTS[v3]; [v2]setpts=PTS/0.5[slowv]; [v1][slowv][v3]concat=n=3:v=1:a=0[out];[out]split[b][c];[c]reverse[r];[b][r]concat[FILTROEXTRA]"[AUDIO] [SALIDA]',
-        'efecto 2':
-          '-ss 0 -t 5 -an -i input.mp4 -y -filter_complex "[0]split[b][c];[c]reverse[r];[b][r]concat" out.mp4',
-      },
-      descripcion_evento: 'this is made by sneza',
-      fecha_evento: '2022-12-02 17:14:04',
-      grabar_evento: 6,
-      id_evento: '638a78ac57e35',
-      iniciar_evento: 3,
-      nombre_evento: 'demo3',
-    },
-  ]);
+  const [jsonData, setJsonData] = useState('');
   const [playurl, setPlayurl] = useState('');
   const fileUrl = 'https://social360.app/';
   const [loading, setLoading] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
   const route = useRoute();
 
   useEffect(() => {
@@ -190,14 +146,17 @@ const SuccessScreen = ({navigation}) => {
   };
 
   useEffect(() => {
+    setDownloading(false);
     if (config !== null) {
+      console.log('config NO null');
       Load();
       setLocal(false);
-      setDownloading(false);
+      setShow2(true);
     } else {
+      console.log('config null');
       Load2();
       setLocal(true);
-      setDownloading(false);
+      setShow2(false);
     }
   }, [config]);
 
@@ -209,7 +168,16 @@ const SuccessScreen = ({navigation}) => {
 
   useEffect(() => {
     if (userProfile !== null) {
-      setId_celular(userProfile.user_profile.id_celular);
+      const cargarDatos = async () => {
+        try{
+          let var_id_celular = await AsyncStorage.getItem('id_celular');
+          console.log(var_id_celular);
+          setId_celular(var_id_celular);
+        }catch (err) {
+          console.log(err);
+        }
+      }
+      cargarDatos();
     }
   }, [userProfile]);
 
@@ -226,6 +194,19 @@ const SuccessScreen = ({navigation}) => {
   }
 
   const Load = () => {
+
+    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    console.log(id_celular);
+    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    const validar = decrypt(config.v_token, id_celular);
+    if(validar !== 'xN6WGiE9Qcu9U298'){
+      try{
+        AsyncStorage.multiRemove(['id_user', 'finToken', 'token', 'evento']);
+      }catch (err) {
+        console.log(err);
+      }
+      return false;
+    }
     const data = decrypt(config.eventos, id_celular);
     const newJsonData = JSON.parse(data);
     let newData = [];
@@ -241,26 +222,32 @@ const SuccessScreen = ({navigation}) => {
     setData2(newData2);
     setJsonData(newJsonData);
   };
-  const Load2 = () => {
-    // const data = decrypt(config.eventos, id_celular);
-    const newJsonData = jsonData;
-    let newData = [];
-    let newData2 = [];
-    Object.keys(newJsonData).forEach((key, idx) => {
-      //newData.push({key: idx + 1, value: newJsonData[key]['nombre_evento']});
-      newData.push({
-        key: newJsonData[key]['id_evento'],
-        value: newJsonData[key]['nombre_evento'],
-      });
-    });
-    setData1(newData);
-    setData2(newData2);
-    // setJsonData(newJsonData);
+  const Load2 = async () => {
+    try{
+      let ultimo_evento = await AsyncStorage.getItem('evento');
+      if(ultimo_evento !== null){
+        console.log(ultimo_evento);
+        const newJsonData = JSON.parse(ultimo_evento);
+        let newData = [];
+        let newData2 = [];
+        Object.keys(newJsonData).forEach((key, idx) => {
+          newData.push({
+            key: newJsonData[key]['id_evento'],
+            value: newJsonData[key]['nombre_evento'],
+          });
+        });
+        setData1(newData);
+        setData2(newData2);
+        setJsonData(newJsonData);
+      }
+    }catch (err) {
+      console.log(err);
+    }
   };
 
-  const [data1, setData1] = useState([{key: 1, value: 'Event Options'}]);
+  const [data1, setData1] = useState([{key: 1, value: 'Seleccione Evento'}]);
 
-  const [data2, setData2] = useState([{key: 1, value: 'Audio Options'}]);
+  const [data2, setData2] = useState([{key: 1, value: 'Seleccione Audio'}]);
   //const data2 = [{key: 1, value: 'Audio Options'}];
 
   /* default numbers */
@@ -321,7 +308,6 @@ const SuccessScreen = ({navigation}) => {
       case 'C001':
         //solo si hay una imagen
         if (cmdimagen.length !== 0) {
-          console.log('agregar codigo de imagennnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
           imagenes = ' -i ' + fs.dirs.PictureDir + '/file_' + cmdimagen[0];
           filtroextra = '[s1];[s1][1:v] overlay=0:0';
         }
@@ -352,15 +338,12 @@ const SuccessScreen = ({navigation}) => {
 
     let fecha = new Date();
     let nombre =
-      fecha.getFullYear() +
-      '_' +
-      fecha.getMonth() +
-      '_' +
-      fecha.getHours() +
-      '_' +
-      fecha.getMinutes() +
-      '_' +
-      fecha.getSeconds();
+      fecha.getFullYear().toString() +
+      fecha.getMonth().toString() +
+      fecha.getDate().toString() +
+      fecha.getHours().toString() +
+      fecha.getMinutes().toString() +
+      fecha.getSeconds().toString();
 
     FFmpegKitConfig.selectDocumentForWrite(nombre + '.mp4', 'video/*').then(
       targeturi => {
@@ -370,7 +353,6 @@ const SuccessScreen = ({navigation}) => {
           console.log(cmd1);
           FFmpegKit.execute(cmd1).then(() => {
             setLoading(false);
-            // console.log(res);
             navigation.push('VideoPlay', {message: targeturi, local:local});
             console.log('----------------------------');
           });
@@ -383,13 +365,24 @@ const SuccessScreen = ({navigation}) => {
   /************************/
   const DownFileEvents = async () => {
     setLoading(true);
-    console.log('\n\n\ndescargarrrrrrrrr\n\n\n');
-    console.log(selected);
+    //console.log('descargarrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr');
+    //console.log(selected);
+    if(selected == 1){
+      setShow(false);
+      setLoading(false);
+      return;
+    }
     //console.log(jsonData);
     const selectedJson = jsonData.filter(val => {
       return val['id_evento'] == selected;
     });
-    //console.log(selectedJson);
+
+    try{
+      await AsyncStorage.setItem('evento', JSON.stringify(selectedJson));
+    }catch (err) {
+      console.log(err);
+    }
+    //console.log(JSON.stringify(selectedJson));
     //console.log(selectedJson[0]['cmd']['efecto 1']);
 
     setCmdevento(selectedJson[0]['cmd']['efecto 1']);
@@ -432,6 +425,7 @@ const SuccessScreen = ({navigation}) => {
     setNumber1(number1);
     setNumber2(number2);
     downloadFile(dataArchivos);
+    setShow(true);
     //let cmd1 = selectedJson[0]['cmd']['efecto 1'];
   };
 
@@ -443,11 +437,10 @@ const SuccessScreen = ({navigation}) => {
     <ScrollView style={styles.background}>
       <Background>
         <View style={styles.selectEvent}>
-          <Header>Select Events</Header>
+          <Header>Seleccionar Evento</Header>
           <SelectList
             setSelected={val => {
               setSelected(val);
-              setShow(true);
             }}
             data={data1}
             save="key"
@@ -459,6 +452,7 @@ const SuccessScreen = ({navigation}) => {
             textStyle={styles.spinnerTextStyle}
           />
         </View>
+        {show2 && (
         <View style={styles.buttons}>
           <Button
             style={{width: '100%'}}
@@ -470,7 +464,7 @@ const SuccessScreen = ({navigation}) => {
                 userProfile.user_profile.token,
               );
             }}>
-            Refresh
+            Actualizar
           </Button>
           <Spinner
             visible={downloading}
@@ -478,9 +472,10 @@ const SuccessScreen = ({navigation}) => {
             textStyle={styles.spinnerTextStyle}
           />
         </View>
+        )}
         {show && (
           <View style={styles.filepicker}>
-            <Header>Select Video File</Header>
+            <Header>Seleccione su video</Header>
           </View>
         )}
         {show && (
@@ -489,7 +484,7 @@ const SuccessScreen = ({navigation}) => {
               style={{width: '50%'}}
               mode="contained"
               onPress={SingleFilePicker}>
-              Choose File
+              Galeria
             </Button>
             <Button
               style={{width: '50%'}}
@@ -497,7 +492,7 @@ const SuccessScreen = ({navigation}) => {
               onPress={() => {
                 navigation.push('Camera');
               }}>
-              Take Video
+              Camara
             </Button>
           </View>
         )}
@@ -513,7 +508,7 @@ const SuccessScreen = ({navigation}) => {
         )}
         {show && (
           <View style={styles.secondpicker}>
-            <Header>Seconds to Start    </Header>
+            <Header>Segundo de inicio  </Header>
             <NumericInput
               initValue={number1}
               onChange={value => {
@@ -524,7 +519,7 @@ const SuccessScreen = ({navigation}) => {
         )}
         {show && (
           <View style={styles.secondpicker}>
-            <Header>Recording Time      </Header>
+            <Header>Duracion de video  </Header>
             <NumericInput
               initValue={number2}
               style={{marginLeft: 10}}
@@ -536,7 +531,7 @@ const SuccessScreen = ({navigation}) => {
         )}
         {show && (
           <View style={styles.selectEvent}>
-            <Header>Select Audio</Header>
+            <Header>Seleccionar Audio</Header>
             <SelectList
               setSelected={val => setSelected(val)}
               data={data2}
@@ -552,13 +547,14 @@ const SuccessScreen = ({navigation}) => {
               style={{width: '100%', marginBottom: 60}}
               mode="contained"
               onPress={Process}>
-              Process
+              Procesar
             </Button>
           </View>
         )}
         {!show && (
           <View style={styles.hidepart}>
-            <Header>Please Select the Events!</Header>
+            <Header>¿Es la primera vez que ingresas?</Header>
+            <Header>Visita www.social360.app y crea tus eventos.</Header>
           </View>
         )}
       </Background>

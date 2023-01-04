@@ -3,6 +3,7 @@ import Toast from 'react-native-toast-message';
 import {Alert, StyleSheet, Text, Pressable, View, Button} from 'react-native';
 import Modal from 'react-native-modal';
 import Spinner from 'react-native-loading-spinner-overlay';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import API from './services/API';
 import {useMutation} from 'react-query';
@@ -39,6 +40,50 @@ export const AuthProvider = ({children}) => {
         setUserProfile(data);
         setId_user(data.user_profile.id_user);
         setToken(data.user_profile.token);
+        const cargarDatos = async () => {
+          try{
+            await AsyncStorage.setItem('id_user', data.user_profile.id_user);
+            await AsyncStorage.setItem('finToken', data.user_profile.finToken);
+            await AsyncStorage.setItem('token', data.user_profile.token);
+            await AsyncStorage.setItem('nombre', data.user_profile.nombre + ' ' + data.user_profile.apellido);
+          }catch (err) {
+            console.log(err);
+          }
+        }
+        cargarDatos();
+        setLoading(false);
+      } else {
+        setModalcontent(data.msg);
+        setModalVisible(true);
+        setLoading(false);
+      }
+    },
+    onError: data => {
+      Toast.show({
+        type: 'error',
+        text1: 'Sorry',
+        text2: data.msg,
+      });
+      setLoading(false);
+    },
+  });
+
+  const {mutate: loginToken} = useMutation(API.loginToken, {
+    onSuccess: data => {
+      if (data.error == false) {
+        setUserProfile(data);
+        setId_user(data.user_profile.id_user);
+        setToken(data.user_profile.token);
+        const cargarDatos = async () => {
+          try{
+            await AsyncStorage.setItem('id_user', data.user_profile.id_user);
+            await AsyncStorage.setItem('finToken', data.user_profile.finToken);
+            await AsyncStorage.setItem('token', data.user_profile.token);
+          }catch (err) {
+            console.log(err);
+          }
+        }
+        cargarDatos();
         setLoading(false);
       } else {
         setModalcontent(data.msg);
@@ -61,8 +106,8 @@ export const AuthProvider = ({children}) => {
       if (data.error == false) {
         Toast.show({
           type: 'success',
-          text1: 'Welcome',
-          text2: 'Successfully loaded config' + '👋',
+          text1: 'Bienvenido',
+          text2: 'Los datos se cargaron correctamente.',
         });
         setConfig(data);
       } else {
@@ -140,6 +185,15 @@ export const AuthProvider = ({children}) => {
               text2: 'Please enter user email and password.',
             });
           }
+        },
+        loginToken: async (id_user, token, id_celular) => {
+            setLoading(true);
+            const userCred = {
+              id_user,
+              token,
+              id_celular,
+            };
+            await loginToken(userCred);
         },
         start: () => {
           console.log('-----aaaaa');
