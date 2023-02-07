@@ -1,13 +1,15 @@
 import React, {Component, useEffect, useState} from 'react';
 import {
   Alert,
+  TouchableOpacity,
   StyleSheet,
   Text,
   Pressable,
+  Dimensions,
   View,
   Image,
 } from 'react-native';
-import Modal from "react-native-modal";
+import Modal from 'react-native-modal';
 import {useRoute} from '@react-navigation/native';
 import VideoPlayer from 'react-native-video-player';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -15,6 +17,10 @@ import Spinner from 'react-native-loading-spinner-overlay';
 
 import Background from '../../components/Background';
 import Button from '../../components/Button';
+import Fav from '../../assets/star.png';
+import Back from '../../assets/back.png';
+import Up from '../../assets/up.png'
+
 
 const VideoPlay = ({navigation}) => {
   const route = useRoute();
@@ -30,7 +36,7 @@ const VideoPlay = ({navigation}) => {
 
   useEffect(() => {
     if (urlQr !== null) {
-      console.log("====urlQR===="+urlQr);
+      console.log('====urlQR====' + urlQr);
       setLoading(false);
       setModalVisible(true);
     }
@@ -91,14 +97,46 @@ const VideoPlay = ({navigation}) => {
   };
 
   return (
-    <Background style={{width: '100%', height: '100%'}}>
-      <View style={{width: '100%', height: '80%'}}>
+    <View>
+      <View style={{width: '100%', height: '100%'}}>
         <VideoPlayer
           style={{width: '100%', height: '100%'}}
           video={{
             uri: route.params.message,
           }}
+          controls={true}
+          // fullscreen={true}
+          // resizeMode={'contain'}
         />
+        <View
+          style={{
+            zIndex: 2,
+            position: 'absolute',
+            marginLeft: '80%',
+            marginTop: '60%',
+          }}>
+          {!route.params.local && (
+            <TouchableOpacity onPress={ () => {
+              console.log('upload file');
+              Upload(route.params.message);
+            }}>
+            <Image
+              source={Up}
+              style={{width: 40, height: 40, backgroundColor: '#700ff7', borderRadius:9}}></Image>
+          </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={() => console.log('Favourite')}>
+            <Image
+              source={Fav}
+              style={{width: 40, height: 40,marginTop:10, backgroundColor: '#700ff7', borderRadius:9}}></Image>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Success')}>
+            <Image
+              source={Back}
+              style={{width: 40, height: 40, marginTop:10, backgroundColor: '#700ff7', borderRadius:9}}></Image>
+          </TouchableOpacity>
+        </View>
+
         <Spinner
           visible={loading}
           textContent={'Uploading...'}
@@ -108,8 +146,10 @@ const VideoPlay = ({navigation}) => {
       <Modal isVisible={isModalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>El video se subio correctamente</Text>
-            <Image source={{uri:urlQr}} style={{height: 150, width: 150}} />
+            <Text style={styles.modalText}>
+              El video se subio correctamente
+            </Text>
+            <Image source={{uri: urlQr}} style={{height: 150, width: 150}} />
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={toggleModal}>
@@ -118,21 +158,7 @@ const VideoPlay = ({navigation}) => {
           </View>
         </View>
       </Modal>
-      {!route.params.local&&<Button
-        mode="contained"
-        onPress={() => {
-          console.log('upload file');
-          Upload(route.params.message);
-        }}>
-        Subir Video
-      </Button>}
-      <Button
-      mode="contained"
-      onPress = {()=>navigation.navigate('Success')}
-      >
-        regresar
-      </Button>
-    </Background>
+    </View>
   );
 };
 
@@ -180,6 +206,15 @@ const styles = StyleSheet.create({
   },
   spinnerTextStyle: {
     color: '#FFF',
+  },
+  video: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').width * (9 / 16),
+    backgroundColor: 'black',
+  },
+  buttons: {
+    zIndex: 2,
+    flex: 1,
   },
 });
 export default VideoPlay;
