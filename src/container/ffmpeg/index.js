@@ -105,6 +105,7 @@ const VideoPlay = ({navigation}) => {
             uri: route.params.message,
           }}
           controls={true}
+          autoplay={true}
           // fullscreen={true}
           // resizeMode={'contain'}
         />
