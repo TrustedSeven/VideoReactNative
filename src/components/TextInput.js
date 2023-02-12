@@ -27,7 +27,10 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   input: {
-    backgroundColor: theme.colors.surface,
+    backgroundColor: "#ffffff",
+    borderRadius:25,
+    borderColor:"#0f0f00",
+    border: "doted"
   },
   description: {
     fontSize: 13,
