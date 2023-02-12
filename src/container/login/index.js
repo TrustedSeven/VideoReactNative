@@ -148,6 +148,11 @@ export default function LogInScreen({navigation}) {
         autoCompleteType="email"
         textContentType="emailAddress"
         keyboardType="email-address"
+        theme={
+          {
+            roundness:35
+          }
+        }
       />}
       {!session&&<TextInput
         label="Password"
