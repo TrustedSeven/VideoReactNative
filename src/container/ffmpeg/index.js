@@ -81,17 +81,13 @@ const VideoPlay = ({navigation}) => {
       .then(response => response.json())
       //If response is in json then in success
       .then(response => {
-        //Success
         console.log(response);
         // DownloadQR(response.qr);
         setUrlQr(response.qr);
       })
       //If response is not in json then in error
       .catch(error => {
-        //Error
         console.error(error);
-        // Alert("Failed Try again1");
-        // setModalVisible(true);
         setLoading(false);
       });
   };
@@ -106,8 +102,6 @@ const VideoPlay = ({navigation}) => {
           }}
           controls={true}
           autoplay={true}
-          // fullscreen={true}
-          // resizeMode={'contain'}
         />
         <View
           style={{
